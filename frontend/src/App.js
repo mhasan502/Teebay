@@ -1,9 +1,9 @@
-import Login from './components/login';
+import LoginPage from './components/login';
 
 function App() {
     return (
         <div className="App">
-            <Login/>
+            <LoginPage/>
         </div>
     );
 }

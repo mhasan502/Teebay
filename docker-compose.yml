@@ -2,28 +2,38 @@ services:
   postgres:
     image: postgres:latest
     container_name: teebay_database
-    network_mode: host
     ports:
       - "5432:5432"
+    restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-      - POSTGRES_HOST_AUTH_METHOD=trust
 
 
   backend:
     build: ./backend
     container_name: teebay_backend
-    network_mode: host
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/opt/
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=postgres
-      - DB_PORT=5432
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
     depends_on:
       - postgres
-    command: python manage.py runserver
+    command: >
+      bash -c "python manage.py migrate &&
+               python manage.py runserver 0.0.0.0:8000"
+
+  frontend:
+    build: ./frontend
+    container_name: teebay_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
