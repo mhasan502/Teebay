@@ -1,12 +1,24 @@
 import React from "react";
 import {TextInput, PasswordInput, Text, Paper, Group, Button, Stack} from '@mantine/core';
 import {useForm} from "@mantine/form";
+import {gql, useMutation} from "@apollo/client";
+
+
+const LOGIN_MUTATION = gql`
+        mutation login($email: String!, $password: String!) {
+            login(email: $email, password: $password) {
+                token
+            }
+        }
+    `;
 
 const LoginPage = () => {
+    const [login_mutation] = useMutation(LOGIN_MUTATION);
+
     const form = useForm({
         initialValues: {
-            email: '',
-            password: '',
+            email: 'mhasan502@gmail.com',
+            password: 'fbxnjhbvdx3324',
         },
 
         validate:{
@@ -23,8 +35,13 @@ const LoginPage = () => {
         }
     });
 
-    const handleLogin = () => {
-    };
+    const handleLogin = async () => {
+        const { email, password } = form.values;
+        await login_mutation({
+            variables: { email, password },
+        });
+        console.log("Success")
+    }
 
     return (
         <Paper radius="md" p="xl">
@@ -37,7 +54,7 @@ const LoginPage = () => {
                     <TextInput
                         required
                         placeholder="Email"
-                        value="mhasan502@gmail.com"//{form.values.email}
+                        value={form.values.email}
                         onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
                         error={form.errors.email && 'Invalid email'}
                         radius="md"
@@ -46,7 +63,7 @@ const LoginPage = () => {
                     <PasswordInput
                         required
                         placeholder="Password"
-                        value="asdbkbas"//{form.values.password}
+                        value={form.values.password}
                         onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
                         error={form.errors.password && 'Password should include at least 6 characters'}
                         radius="md"

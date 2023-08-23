@@ -1,58 +1,23 @@
 import graphene
-from graphene_django import DjangoObjectType
 from .models import UserModel
-from .mutations import LoginMutation
-
-
-class UserType(DjangoObjectType):
-    class Meta:
-        model = UserModel
-        exclude = ("password",)
+from .mutations import SignInMutation, SignUpMutation
+from .types import UserType
 
 
 class Query(graphene.ObjectType):
     all_user = graphene.List(UserType)
     user = graphene.Field(UserType, email=graphene.String(required=True))
 
-    sign_up = graphene.Field(
-        UserType,
-        first_name=graphene.String(required=True),
-        last_name=graphene.String(required=True),
-        address=graphene.String(required=True),
-        email=graphene.String(required=True),
-        phone=graphene.String(required=True),
-        password=graphene.String(required=True),
-    )
-
-    def resolve_all_user(self):
+    def resolve_all_user(self, info):
         return UserModel.objects.all()
 
-    def resolve_user(self, args):
-        email = args["email"]
+    def resolve_user(self, info, email):
         return UserModel.objects.get(email=email)
-
-    def resolve_sign_up(self, info):
-        first_name = info["first_name"]
-        last_name = info["last_name"]
-        address = info["address"]
-        email = info["email"]
-        phone = info["phone"]
-        password = info["password"]
-
-        user = UserModel(
-            first_name=first_name,
-            last_name=last_name,
-            address=address,
-            email=email,
-            phone=phone,
-            password=password,
-        )
-        user.save()
-        return user
 
 
 class Mutation(graphene.ObjectType):
-    login = LoginMutation.Field()
+    sign_in = SignInMutation.Field()
+    sign_up = SignUpMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

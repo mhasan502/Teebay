@@ -3,20 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-
-const apolloClient = new ApolloClient({
-    url: "http://127.0.0.1:8000/api/user",
+const client = new ApolloClient({
+    url: 'http://localhost:8000/api/user/',
     cache: new InMemoryCache(),
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <ApolloProvider client={apolloClient}>
-        <React.StrictMode>
-            <App client={apolloClient}/>
-        </React.StrictMode>
+    <ApolloProvider client={client}>
+        <App/>
     </ApolloProvider>
 );
 
@@ -24,3 +21,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+export default client;

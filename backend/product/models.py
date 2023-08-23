@@ -3,53 +3,40 @@ from user.models import UserModel
 
 
 class CategoryModel(models.Model):
-    """
-    Category model for storing category data
-    """
-    category_choices = (
-        ('Electronics', 'ELECTRONICS'),
-        ('Furniture', 'FURNITURE'),
-        ('Home Appliances', 'HOME APPLIANCES'),
-        ('Sporting Goods', 'SPORTING GOODS'),
-        ('Outdoor', 'OUTDOOR'),
-        ('Toys', 'TOYS'),
-    )
-    category_name = models.CharField(choices=category_choices)
+    category_name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.category_name
 
-    class Meta:
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
 
-
-class RentModel(models.Model):
-    """
-    Rent model for storing rent data
-    """
-    rent_choices = (
-        ('per hour', 'Hourly'),
-        ('per day', 'Daily'),
-    )
-    rent_type = models.CharField(choices=rent_choices)
-    rent_price = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return self.rent_type
-
-    class Meta:
-        verbose_name = 'Rent'
-        verbose_name_plural = 'Rents'
+RENT_CHOICES = [
+    ('Hourly', 'Hourly'),
+    ('Daily', 'Daily')
+]
 
 
 class ProductModel(models.Model):
     """
     Product model for storing product data
     """
+
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
-    category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE)
     description = models.TextField(max_length=500)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    rent = models.ForeignKey(RentModel, on_delete=models.CASCADE)
+
+    category = models.ManyToManyField(CategoryModel, related_name='category')
+
+    rent_type = models.CharField(max_length=10, choices=RENT_CHOICES)
+    rent_price = models.DecimalField(max_digits=10, decimal_places=2)
+
     owner = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_posted']
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
+
+    def __str__(self):
+        return self.title
