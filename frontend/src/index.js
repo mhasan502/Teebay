@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 
 const client = new ApolloClient({
-    url: 'http://localhost:8000/api/user/',
+    uri: 'http://127.0.0.1:8000/graphql/',
     cache: new InMemoryCache(),
 });
 

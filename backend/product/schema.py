@@ -30,6 +30,3 @@ class Mutation(graphene.ObjectType):
     create_product = CreateProductMutation.Field()
     edit_product = EditProductMutation.Field()
     delete_product = DeleteProductMutation.Field()
-
-
-schema = graphene.Schema(query=Query, mutation=Mutation)

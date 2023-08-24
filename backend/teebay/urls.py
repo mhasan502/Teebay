@@ -1,9 +1,10 @@
 from django.urls import path, include
+from graphene_django.views import GraphQLView
+from django.views.decorators.csrf import csrf_exempt
+from .schema import schema
 
 
 urlpatterns = [
-    path("api/user/", include('user.urls'), name="user"),
-    path("api/product/", include('product.urls'), name="product"),
-
+    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
 
 ]

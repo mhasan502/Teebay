@@ -18,6 +18,3 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     sign_in = SignInMutation.Field()
     sign_up = SignUpMutation.Field()
-
-
-schema = graphene.Schema(query=Query, mutation=Mutation)
