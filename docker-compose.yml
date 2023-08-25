@@ -35,5 +35,9 @@ services:
     container_name: teebay_frontend
     ports:
       - "3000:3000"
+    volumes:
+        - ./frontend:/opt/
     depends_on:
       - backend
+    command: >
+        bash -c "npm start"

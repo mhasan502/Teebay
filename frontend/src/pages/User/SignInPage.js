@@ -2,30 +2,36 @@ import React from "react";
 import {TextInput, PasswordInput, Text, Paper, Group, Button, Stack} from '@mantine/core';
 import {useForm} from "@mantine/form";
 import {gql, useMutation} from "@apollo/client";
-import {useNavigate} from "react-router-dom";
 
 
-const SIGNIN_MUTATION = gql`
+const SIGN_IN_MUTATION = gql`
     mutation signIn($email: String!, $password: String!) {
-        signIn(data: {email: $email, password: $password}) {
+        signIn(data: {
+            email: $email, 
+            password: $password
+        }) 
+        {
             token
+            email
         }
     }
 `;
 
 const SignInPage = () => {
-    const navigate = useNavigate();
-    const [signin_mutation, {loading, error, token}] = useMutation(SIGNIN_MUTATION, {
+    const [signInMutation] = useMutation(SIGN_IN_MUTATION, {
         onCompleted: (data) => {
             localStorage.setItem('token', data.signIn.token);
-            // redirect to root page
-            window.location.href = '/';
+            localStorage.setItem('email', data.signIn.email);
+            window.location.href = ('/');
+        },
+        onError: (error) => {
+            alert(error);
         }
     });
     const form = useForm({
         initialValues: {
-            email: 'mhasan502@gmail.com',
-            password: 'fbxnjhbvdx3324',
+            email: '',
+            password: '',
         },
 
         validate: {
@@ -44,7 +50,7 @@ const SignInPage = () => {
 
     const handleSignIn = async () => {
         const {email, password} = form.values;
-        await signin_mutation({
+        await signInMutation({
             variables: {
                 email: email,
                 password: password,
@@ -58,7 +64,7 @@ const SignInPage = () => {
                 SIGN IN
             </Text>
 
-            <form onSubmit={handleSignIn}>
+            <Stack>
                 <Stack>
                     <TextInput
                         required
@@ -80,13 +86,14 @@ const SignInPage = () => {
                 </Stack>
 
                 <Group position="apart" mt="xl">
-                    <Button type="submit" color="violet">
+                    <Button type="submit" color="violet" onClick={handleSignIn}>
                         Sign In
                     </Button>
                 </Group>
-            </form>
+            </Stack>
+            Don't have an Account? <a href="/sign-up">Sign Up</a>
         </Paper>
-    );
+    )
 };
 
 export default SignInPage;

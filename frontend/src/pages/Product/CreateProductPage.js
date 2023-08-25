@@ -1,0 +1,93 @@
+import React, {useState} from "react";
+import {Paper, Text} from "@mantine/core";
+import SelectProductTitle from "./CreateProduct/SelectProductTitle";
+import SelectProductCategories from "./CreateProduct/SelectProductCategories";
+import SelectProductDescription from "./CreateProduct/SelectProductDescription";
+import SelectProductPriceRent from "./CreateProduct/SelectProductPriceRent";
+import ProductSummary from "./CreateProduct/ProductSummary";
+
+const CreateProductPage = () => {
+    const [step, setStep] = useState(1);
+    const [values, setValues] = useState({
+        title: '',
+        categories: '',
+        description: '',
+        price: '',
+        rent_price: '',
+        rent_type: '',
+    });
+
+    const nextStep = () => {
+        setStep(step + 1)
+    };
+    const prevStep = () => {
+        setStep(step - 1)
+    };
+
+    const handleChange = (input) => e => {
+        if(input === 'title' || input === 'description'){
+            setValues({...values, [input]: e.target.value});
+        } else {
+            setValues({...values, [input]: e});
+        }
+    };
+
+
+    const renderStep = () => {
+        switch (step) {
+            case 1:
+                return (
+                    <SelectProductTitle
+                        nextStep={nextStep}
+                        handleChange={handleChange}
+                        values={values}
+                    />
+                )
+            case 2:
+                return (
+                    <SelectProductCategories
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        handleChange={handleChange}
+                        values={values}
+                    />
+                )
+            case 3:
+                return (
+                    <SelectProductDescription
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        handleChange={handleChange}
+                        values={values}
+                    />
+                )
+            case 4:
+                return (
+                    <SelectProductPriceRent
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        handleChange={handleChange}
+                        values={values}
+                    />
+                )
+            case 5:
+                return (
+                    <ProductSummary
+                        prevStep={prevStep}
+                        values={values}
+                    />
+                )
+            default:
+                return (
+                    <Text>Something went wrong</Text>
+                )
+        }
+    }
+    return (
+        <Paper>
+            {renderStep()}
+        </Paper>
+    )
+};
+
+export default CreateProductPage;

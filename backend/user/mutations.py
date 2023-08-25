@@ -15,6 +15,7 @@ class SignInMutation(graphene.Mutation):
         data = SignInInput(required=True)
 
     token = graphene.String()
+    email = graphene.String()
 
     @classmethod
     def mutate(cls, root, info, data):
@@ -23,13 +24,16 @@ class SignInMutation(graphene.Mutation):
         if user is None:
             raise ValidationError('Invalid email address')
 
+        if user.password != data.password:
+            raise ValidationError('Invalid password')
+
         token = jwt.encode(
             {'user_id': (user.email + user.password)},
             key=decouple.config("SECRET_KEY"),
             algorithm='HS256'
         )
 
-        return cls(token=token)
+        return cls(token=token, email=user.email)
 
 
 class SignUpInput(graphene.InputObjectType):
@@ -45,6 +49,7 @@ class SignUpMutation(graphene.Mutation):
         data = SignUpInput(required=True)
 
     token = graphene.String()
+    email = graphene.String()
 
     @classmethod
     def mutate(cls, root, info, data):
@@ -68,4 +73,4 @@ class SignUpMutation(graphene.Mutation):
             algorithm='HS256'
         )
 
-        return cls(token=token)
+        return cls(token=token, email=user.email)

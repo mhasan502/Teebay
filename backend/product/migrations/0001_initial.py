@@ -22,6 +22,61 @@ class Migration(migrations.Migration):
         for category in category_list:
             CategoryModel.objects.create(category_name=category)
 
+    def populate_product_table(self, schema_editor):
+        ProductModel = self.get_model("product", "ProductModel")
+        CategoryModel = self.get_model("product", "CategoryModel")
+        UserModel = self.get_model("user", "UserModel")
+
+        product_list = [
+            {
+                "title": "Apple iPhone 11 Pro Max",
+                "description": "The iPhone 11 Pro Max is the best that Apple can cram into a smartphone - the high-end screen, powerful speakers, upgraded processor all support the huge upgrades to the camera. However, those upgrades don't quite warrant the huge price leap over the iPhone 11 Pro.",
+                "price": 1099.00,
+                "rent_type": "Daily",
+                "rent_price": 10.00,
+                "category": [CategoryModel.objects.get(category_name="ELECTRONICS")],
+                "owner": UserModel.objects.get(id=1),
+            },
+            {
+                "title": "Samsung Galaxy S20 Ultra",
+                "description": "The Samsung Galaxy S20 Ultra is a beast of a phone with a 6.9-inch 120Hz display, a 108MP camera with super-long zoom and 5G standard, but its hard to justify the price tag.",
+                "price": 1399.00,
+                "rent_type": "Daily",
+                "rent_price": 10.00,
+                "category": [CategoryModel.objects.get(category_name="ELECTRONICS")],
+                "owner": UserModel.objects.get(id=2),
+            },
+            {
+                "title": "Plastic Chair",
+                "description": "Plastic Chair",
+                "price": 10.00,
+                "rent_type": "Daily",
+                "rent_price": 1.00,
+                "category": [CategoryModel.objects.get(category_name="FURNITURE")],
+                "owner": UserModel.objects.get(id=1),
+            },
+            {
+                "title": "Flamingo Toys",
+                "description": "Flamingo Toys",
+                "price": 10.00,
+                "rent_type": "Daily",
+                "rent_price": 1.00,
+                "category": [CategoryModel.objects.get(category_name="TOYS")],
+                "owner": UserModel.objects.get(id=1),
+            },
+        ]
+        for product in product_list:
+            p = ProductModel.objects.create(
+                title=product["title"],
+                description=product["description"],
+                price=product["price"],
+                rent_type=product["rent_type"],
+                rent_price=product["rent_price"],
+                owner=product["owner"],
+            )
+            p.category.set(product["category"])
+            p.save()
+
     operations = [
         migrations.CreateModel(
             name="CategoryModel",
@@ -76,5 +131,8 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(
             code=populate_category_table
+        ),
+        migrations.RunPython(
+            code=populate_product_table
         ),
     ]

@@ -9,6 +9,4 @@ COPY . /opt/
 RUN npm ci
 RUN npm cache clean --force
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["/bin/bash"]

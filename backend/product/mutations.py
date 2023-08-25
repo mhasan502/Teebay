@@ -41,7 +41,7 @@ class CreateProductMutation(graphene.Mutation):
 
 class EditProductMutation(graphene.Mutation):
     class Arguments:
-        id = graphene.Int(required=True)
+        id = graphene.String(required=True)
         data = ProductInput(required=True)
 
     message = graphene.String()
@@ -67,7 +67,7 @@ class EditProductMutation(graphene.Mutation):
 
 class DeleteProductMutation(graphene.Mutation):
     class Arguments:
-        id = graphene.Int(required=True)
+        id = graphene.String(required=True)
 
     message = graphene.String()
 
