@@ -36,12 +36,16 @@ const ListProductPage = () => {
             <Text size="xl" weight={500} ta="center">
                 ALL PRODUCTS
             </Text>
-            {products.map((product) => (
-                <Product product={product}/>
+            {products.map((product, index) => (
+                <Product product={product} key={index}/>
             ))}
-            <Button color="violet">
-                <Link to="/create-product">Add Product</Link>
-            </Button>
+
+            <Link to="/create-product">
+                <Button color="violet">
+                    Add Product
+                </Button>
+            </Link>
+
         </div>
     )
 };

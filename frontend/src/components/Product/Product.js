@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Group, Modal, Text, Paper, Space, Box} from "@mantine/core"
 import {useDisclosure} from "@mantine/hooks";
 import {gql, useMutation} from "@apollo/client";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 const DELETE_PRODUCT_QUERY = gql`
@@ -14,20 +14,21 @@ const DELETE_PRODUCT_QUERY = gql`
 `;
 
 const Product = ({product}) => {
+    const navigate = useNavigate();
     const [openedDeleteModal, {open, close}] = useDisclosure(false);
 
     const [deleteProductMutation] = useMutation(DELETE_PRODUCT_QUERY, {
         onCompleted: (data) => {
             alert(data.deleteProduct.message);
-            window.location.reload();
+            navigate(0);
         },
         onError: (error) => {
             alert(error);
         }
     });
 
-    const handleDelete = () => {
-        deleteProductMutation({
+    const handleDelete = async () => {
+        await deleteProductMutation({
             variables: {
                 id: product.id,
             }
@@ -51,11 +52,11 @@ const Product = ({product}) => {
                 <Group position="apart">
                     <Text size="xl">{product.title}</Text>
                     <Group position="right">
-                        <Button color="red">
-                            <Link to="/edit-product" state={{product: product}}>
+                        <Link to="/edit-product" state={{product: product}}>
+                            <Button color="red">
                                 Edit
-                            </Link>
-                        </Button>
+                            </Button>
+                        </Link>
                         <Button onClick={open}>Delete</Button>
                     </Group>
                 </Group>

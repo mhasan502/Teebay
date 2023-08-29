@@ -7,24 +7,23 @@ from .types import ProductType
 class ProductInput(graphene.InputObjectType):
     title = graphene.String(required=True)
     description = graphene.String(required=True)
-    price = graphene.Decimal(required=True)
-    category = graphene.String(required=True)
+    price = graphene.String(required=True)
+    category = graphene.List(graphene.String)
     rent_type = graphene.String(required=True)
-    rent_price = graphene.Decimal(required=True)
-    user_email = graphene.String(required=True)
+    rent_price = graphene.String(required=True)
+    user_email = graphene.String()
 
 
 class CreateProductMutation(graphene.Mutation):
     class Arguments:
         data = ProductInput(required=True)
 
-    product = graphene.Field(ProductType)
+    message = graphene.Field(graphene.String)
 
     @classmethod
     def mutate(cls, root, info, data):
         user = UserModel.objects.filter(email=data.user_email).first()
-        categories = CategoryModel.objects.filter(category_name=data.category)
-
+        categories = CategoryModel.objects.filter(category_name__in=data.category)
         product = ProductModel.objects.create(
             title=data.title,
             description=data.description,
@@ -36,7 +35,8 @@ class CreateProductMutation(graphene.Mutation):
         product.category.set(categories)
         product.save()
 
-        return cls(product=product)
+        message = "Product created successfully"
+        return cls(message=message)
 
 
 class EditProductMutation(graphene.Mutation):
@@ -49,7 +49,7 @@ class EditProductMutation(graphene.Mutation):
     @classmethod
     def mutate(cls, root, info, id, data):
         user = UserModel.objects.filter(email=data.user_email).first()
-        categories = CategoryModel.objects.filter(category_name=data.category)
+        categories = CategoryModel.objects.filter(id__in=data.category)
 
         product = ProductModel.objects.get(id=id)
         product.title = data.title

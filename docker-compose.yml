@@ -24,6 +24,7 @@ services:
       - DB_PASSWORD=postgres
       - DB_HOST=postgres
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      - SECRET_KEY=03cud0)5uaclj74=f8p%w9ywocvm_%2qhda$155lxd3h)6znql
     depends_on:
       - postgres
     command: >

@@ -5,7 +5,7 @@ import {gql, useMutation} from "@apollo/client";
 
 
 const SIGN_UP_MUTATION = gql`
-    mutation SignUpMutation($firstName: String!, $lastName: String!, $address: String!, $email: String!, $phone: String!, $password: String!) {
+    mutation SignUp($firstName: String!, $lastName: String!, $address: String!, $email: String!, $phone: String!, $password: String!) {
         signUp(data: {
             signInInput: {
                 email: $email, 
@@ -15,7 +15,7 @@ const SIGN_UP_MUTATION = gql`
             lastName: $lastName, 
             address: $address, 
             phone: $phone, 
-        }) 
+        })
         {
             token
             email
@@ -26,8 +26,8 @@ const SIGN_UP_MUTATION = gql`
 const SignUpPage = () => {
     const [signUpMutation] = useMutation(SIGN_UP_MUTATION, {
         onCompleted: (data) => {
-            localStorage.setItem('token', data.signIn.token);
-            localStorage.setItem('email', data.signIn.email);
+            localStorage.setItem('token', data.signUp.token);
+            localStorage.setItem('email', data.signUp.email);
             window.location.href = ('/');
         },
         onError: (error) => {

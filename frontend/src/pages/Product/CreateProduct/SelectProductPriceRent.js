@@ -15,7 +15,6 @@ const SelectProductPriceRent = ({nextStep, prevStep, handleChange, values}) => {
             <NumberInput
                 required
                 placeholder="Purchase price"
-                precision={2}
                 value={values.price}
                 onChange={handleChange('price')}
                 radius="md"
@@ -27,7 +26,6 @@ const SelectProductPriceRent = ({nextStep, prevStep, handleChange, values}) => {
                 <NumberInput
                     required
                     placeholder="Rent price"
-                    precision={2}
                     value={values.rent_price}
                     onChange={handleChange('rent_price')}
                     radius="md"

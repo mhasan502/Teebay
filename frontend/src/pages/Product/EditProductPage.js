@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useLocation} from "react-router-dom";
 import {Button, Group, MultiSelect, NumberInput, Select, Stack, Text, Textarea, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {gql, useQuery} from "@apollo/client";
+import {gql, useMutation, useQuery} from "@apollo/client";
 
 
 const ALL_CATEGORY_TYPES_QUERY = gql`
@@ -13,6 +13,37 @@ const ALL_CATEGORY_TYPES_QUERY = gql`
         }
     }
 `;
+
+const EDIT_PRODUCT_MUTATION = gql`
+    mutation EditProductMutation(
+        $id: String!, 
+        $title: String!, 
+        $description: String!, 
+        $price: String!, 
+        $category: [String!], 
+        $rentType: String!, 
+        $rentPrice: String!,
+        $userEmail: String!
+    )
+    {
+        editProduct(
+            id: $id,
+            data: {
+                title: $title,
+                description: $description,
+                price: $price,
+                category: $category,
+                rentType: $rentType,
+                rentPrice: $rentPrice,
+                userEmail: $userEmail
+            }
+        )
+        {
+            message
+        }
+    }
+`;
+
 
 const EditProductPage = () => {
     const location = useLocation();
@@ -26,6 +57,15 @@ const EditProductPage = () => {
         }
     });
 
+    const [editProductMutation] = useMutation(EDIT_PRODUCT_MUTATION, {
+        onCompleted: (data) => {
+            console.log(data);
+        },
+        onError: (error) => {
+            alert(error);
+        }
+    });
+
 
     const form = useForm({
         initialValues: {
@@ -33,10 +73,25 @@ const EditProductPage = () => {
             category: product.category.map((category) => category.id),
             description: product.description,
             price: product.price,
-            rent_price: product.rentPrice,
-            rent_type: product.rentType,
+            rentPrice: product.rentPrice,
+            rentType: product.rentType,
         },
     });
+
+    const handleEditProduct = async () => {
+        await editProductMutation({
+            variables: {
+                id: product.id,
+                title: form.values.title,
+                description: form.values.description,
+                price: form.values.price.toString(),
+                category: form.values.category,
+                rentType: form.values.rentType,
+                rentPrice: form.values.rentPrice.toString(),
+                userEmail: localStorage.getItem('email')
+            }
+        })
+    };
 
 
     return (
@@ -83,7 +138,6 @@ const EditProductPage = () => {
                             required
                             placeholder="Enter product price"
                             defaultValue={parseFloat(form.values.price)}
-                            precision={2}
                             onChange={(event) => form.setFieldValue("price", event)}
                             radius="md"
                             hideControls
@@ -96,9 +150,8 @@ const EditProductPage = () => {
                             <NumberInput
                                 required
                                 placeholder="Enter product rent price"
-                                defaultValue={parseFloat(form.values.rent_price)}
-                                precision={2}
-                                onChange={(event) => form.setFieldValue("rent_price", event)}
+                                defaultValue={parseFloat(form.values.rentPrice)}
+                                onChange={(event) => form.setFieldValue("rentPrice", event)}
                                 radius="md"
                                 hideControls
                                 icon="$"
@@ -106,21 +159,23 @@ const EditProductPage = () => {
                             <Select
                                 required
                                 placeholder="Enter product rent type"
-                                value={form.values.rent_type}
+                                value={form.values.rentType}
                                 data={[
                                     {value: 'DAILY', label: 'per day'},
                                     {value: 'HOURLY', label: 'per hour'},
                                 ]}
-                                onChange={(event) => form.setFieldValue("rent_type", event)}
+                                onChange={(event) => form.setFieldValue("rentType", event)}
                                 radius="md"
                             />
                         </Group>
                     </Stack>
                 </Group>
             </Stack>
-            <Button>
-                Edit Product
-            </Button>
+            <Group position="right">
+                <Button type="submit" color="violet" onClick={handleEditProduct}>
+                    Edit Product
+                </Button>
+            </Group>
         </Stack>
     )
 };
