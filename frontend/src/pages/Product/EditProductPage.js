@@ -1,6 +1,18 @@
-import React, {useState} from 'react';
-import {useLocation} from "react-router-dom";
-import {Button, Group, MultiSelect, NumberInput, Select, Stack, Text, Textarea, TextInput} from "@mantine/core";
+import React, {useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {
+    Button,
+    Container,
+    Group,
+    MultiSelect,
+    NumberInput,
+    Select,
+    Space,
+    Stack,
+    Text,
+    Textarea,
+    TextInput
+} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {gql, useMutation, useQuery} from "@apollo/client";
 
@@ -46,6 +58,7 @@ const EDIT_PRODUCT_MUTATION = gql`
 
 
 const EditProductPage = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const {product} = location.state;
 
@@ -60,6 +73,7 @@ const EditProductPage = () => {
     const [editProductMutation] = useMutation(EDIT_PRODUCT_MUTATION, {
         onCompleted: (data) => {
             console.log(data);
+            navigate(-1);
         },
         onError: (error) => {
             alert(error);
@@ -95,88 +109,116 @@ const EditProductPage = () => {
 
 
     return (
-        <Stack>
-            <Stack>
-                <Text>Title</Text>
+        <Container my={100}>
+            <Stack spacing="xs">
+                <Text>
+                    Title
+                </Text>
                 <TextInput
                     required
+                    size="md"
                     placeholder="Enter product title"
                     value={form.values.title}
                     onChange={(event) => form.setFieldValue("title", event.currentTarget.value)}
+                    variant="filled"
                     radius="md"
                 />
             </Stack>
-            <Stack>
-                <Text>Category</Text>
+            <Space h="lg"/>
+            <Stack spacing="xs">
+                <Text>
+                    Category
+                </Text>
                 <MultiSelect
                     required
-                    placeholder="Enter product category"
+                    size="md"
+                    placeholder="Select a category"
                     value={form.values.category}
                     data={categoryTypes.map((category) => ({value: category.id, label: category.categoryName}))}
                     onChange={(event) => form.setFieldValue("category", event)}
+                    variant="filled"
                     radius="md"
-
                 />
-
             </Stack>
-            <Stack>
-                <Text>Description</Text>
+            <Space h="lg"/>
+            <Stack spacing="xs">
+                <Text>
+                    Description
+                </Text>
                 <Textarea
                     required
                     size="md"
-                    placeholder="Enter product description"
+                    placeholder="Enter product description of your product"
                     value={form.values.description}
                     onChange={(event) => form.setFieldValue("description", event.currentTarget.value)}
+                    variant="filled"
                     radius="md"
+                    autosize
+                    minRows={5}
                 />
             </Stack>
-            <Stack>
+            <Space h="lg"/>
+            <Stack spacing="xs">
                 <Group>
-                    <Stack>
-                        <Text>Price</Text>
+                    <Stack spacing="xs">
+                        <Text>
+                            Price
+                        </Text>
                         <NumberInput
                             required
+                            size="md"
                             placeholder="Enter product price"
                             defaultValue={parseFloat(form.values.price)}
                             onChange={(event) => form.setFieldValue("price", event)}
+                            variant="filled"
                             radius="md"
                             hideControls
                             icon="$"
                         />
                     </Stack>
-                    <Stack>
-                        <Text>Rent price</Text>
+                    <Stack spacing="xs">
+                        <Text>
+                            Rent price
+                        </Text>
                         <Group>
                             <NumberInput
                                 required
+                                size="md"
                                 placeholder="Enter product rent price"
                                 defaultValue={parseFloat(form.values.rentPrice)}
                                 onChange={(event) => form.setFieldValue("rentPrice", event)}
+                                variant="filled"
                                 radius="md"
                                 hideControls
                                 icon="$"
                             />
                             <Select
                                 required
+                                size="md"
                                 placeholder="Enter product rent type"
                                 value={form.values.rentType}
+                                onChange={(event) => form.setFieldValue("rentType", event)}
                                 data={[
                                     {value: 'DAILY', label: 'per day'},
                                     {value: 'HOURLY', label: 'per hour'},
                                 ]}
-                                onChange={(event) => form.setFieldValue("rentType", event)}
+                                variant="filled"
                                 radius="md"
                             />
                         </Group>
                     </Stack>
                 </Group>
             </Stack>
+
+            <Space h="lg"/>
+            <Space h="lg"/>
+
             <Group position="right">
                 <Button type="submit" color="violet" onClick={handleEditProduct}>
                     Edit Product
                 </Button>
             </Group>
-        </Stack>
+        </Container>
     )
 };
 

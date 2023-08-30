@@ -1,5 +1,13 @@
 import React from "react";
-import {Button, Group, Stack, Text, TextInput} from "@mantine/core";
+import {
+    Button,
+    Center,
+    Group,
+    Space,
+    Stack,
+    TextInput,
+    Title
+} from "@mantine/core";
 
 const SelectProductTitle = ({nextStep, handleChange, values}) => {
     const nextHandler = () => {
@@ -8,17 +16,30 @@ const SelectProductTitle = ({nextStep, handleChange, values}) => {
 
     return (
         <Stack>
-            <Text size="xl" ta="center">Select a title for your product</Text>
+            <Center>
+                <Title>
+                    Select a title for your product
+                </Title>
+            </Center>
+
+            <Space h="md"/>
+
             <TextInput
                 required
+                size="md"
                 placeholder="Enter product title"
-                radius="md"
                 value={values.title}
                 onChange={handleChange("title")}
+                variant="filled"
+                radius="md"
             />
 
+            <Space h="md"/>
+
             <Group position="right">
-                <Button onClick={nextHandler} color="violet">Next</Button>
+                <Button onClick={nextHandler} color="violet">
+                    Next
+                </Button>
             </Group>
         </Stack>
     )

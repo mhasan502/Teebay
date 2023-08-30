@@ -1,7 +1,20 @@
 import React from "react";
-import {TextInput, PasswordInput, Text, Paper, Group, Button, Stack} from '@mantine/core';
+import {
+    TextInput,
+    PasswordInput,
+    Text,
+    Paper,
+    Group,
+    Button,
+    Stack,
+    Center,
+    Container,
+    Space,
+    Title
+} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {gql, useMutation} from "@apollo/client";
+import {Link} from "react-router-dom";
 
 
 const SIGN_IN_MUTATION = gql`
@@ -35,17 +48,9 @@ const SignInPage = () => {
         },
 
         validate: {
-            email: (value) => {
-                if (!value.includes('@')) {
-                    return 'Invalid email';
-                }
-            },
-            password: (value) => {
-                if (value.length < 6) {
-                    return 'Password should include at least 6 characters';
-                }
-            },
-        }
+            email: (value) => (!value.includes('@') ? 'Invalid email' : null),
+            password: (value) => ((value.length < 6) ? 'Password should include at least 6 characters' : null),
+        },
     });
 
     const handleSignIn = async () => {
@@ -59,40 +64,60 @@ const SignInPage = () => {
     }
 
     return (
-        <Paper radius="md" p="xl">
-            <Text size="xl" weight={500}>
-                SIGN IN
-            </Text>
-
+        <Container size="xs" px="xs" my={100}>
             <Stack>
-                <Stack>
-                    <TextInput
-                        required
-                        placeholder="Email"
-                        value={form.values.email}
-                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                        error={form.errors.email && 'Invalid email'}
-                        radius="md"
-                    />
+                <Center>
+                    <Title>
+                        SIGN IN
+                    </Title>
+                </Center>
+                <Paper radius="md" p="xl" shadow="md" withBorder>
+                    <Stack>
+                        <Space h="md"/>
+                        <Stack>
+                            <TextInput
+                                required
+                                size="md"
+                                placeholder="Email"
+                                value={form.values.email}
+                                onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                                error={form.errors.email && 'Invalid email'}
+                                radius="md"
+                            />
+                            <PasswordInput
+                                required
+                                size="md"
+                                placeholder="Password"
+                                value={form.values.password}
+                                onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                                error={form.errors.password && 'Password should include at least 6 characters'}
+                                radius="md"
+                            />
+                        </Stack>
 
-                    <PasswordInput
-                        required
-                        placeholder="Password"
-                        value={form.values.password}
-                        onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                        error={form.errors.password && 'Password should include at least 6 characters'}
-                        radius="md"
-                    />
-                </Stack>
+                        <Center>
+                            <Group position="apart" mt="xl">
+                                <Button type="submit" color="violet" onClick={handleSignIn}>
+                                    LOGIN
+                                </Button>
+                            </Group>
+                        </Center>
 
-                <Group position="apart" mt="xl">
-                    <Button type="submit" color="violet" onClick={handleSignIn}>
-                        Sign In
-                    </Button>
-                </Group>
+                        <Group position="center" spacing="xs">
+                            <Text ta="center">
+                                Don't have an account?
+                            </Text>
+                            <Link to="/sign-up">
+                                <Text color="blue" weight={500}>
+                                    Signup
+                                </Text>
+                            </Link>
+                        </Group>
+
+                    </Stack>
+                </Paper>
             </Stack>
-            Don't have an Account? <a href="/sign-up">Sign Up</a>
-        </Paper>
+        </Container>
     )
 };
 

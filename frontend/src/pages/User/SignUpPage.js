@@ -1,7 +1,20 @@
-import React from 'react';
-import {TextInput, PasswordInput, Text, Paper, Group, Button, Stack} from '@mantine/core';
+import React from "react";
+import {
+    TextInput,
+    PasswordInput,
+    Text,
+    Paper,
+    Group,
+    Button,
+    Stack,
+    Container,
+    Title,
+    Center,
+    Space
+} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {gql, useMutation} from "@apollo/client";
+import {Link} from "react-router-dom";
 
 
 const SIGN_UP_MUTATION = gql`
@@ -46,44 +59,13 @@ const SignUpPage = () => {
         },
 
         validate: {
-            firstName: (value) => {
-                if (value.length < 1) {
-                    return 'First name is required';
-                }
-            },
-            lastName: (value) => {
-                if (value.length < 1) {
-                    return 'Last name is required';
-                }
-            },
-            address: (value) => {
-                if (value.length < 1) {
-                    return 'Address is required';
-                }
-            },
-            email: (value) => {
-                if (!value.includes('@')) {
-                    return 'Invalid email';
-                }
-            },
-            phone: (value) => {
-                if (value.length < 11) {
-                    return 'Invalid phone number';
-                }
-            },
-            password: (value) => {
-                if (value.length < 6) {
-                    return 'Password should include at least 6 characters';
-                }
-            },
-            confirmPassword: (value) => {
-                if (value.length < 6) {
-                    return 'Password should include at least 6 characters';
-                }
-                if (form.values.password !== value) {
-                    return 'Password does not match';
-                }
-            },
+            firstName: (value) => ((value.length < 1) ? 'First name is required' : null),
+            lastName: (value) => ((value.length < 1) ? 'Last name is required' : null),
+            address: (value) => ((value.length < 1) ? 'Address is required' : null),
+            email: (value) => ((!value.includes('@')) ? 'Invalid email' : null),
+            phone: (value) => ((value.length < 11) ? 'Invalid phone number' : null),
+            password: (value) => ((value.length < 6) ? 'Password should include at least 6 characters' : null),
+            confirmPassword: (value) => ((value.length >= 6 && form.values.password === value) ? null : 'Password does not match'),
         }
     });
 
@@ -101,82 +83,111 @@ const SignUpPage = () => {
         });
     }
     return (
-        <Paper radius="md" p="xl">
-            <Text size="xl" weight={500}>
-                SIGN UP
-            </Text>
-
+        <Container size="xs" px="xs" my={100}>
             <Stack>
-                <Stack>
-                    <TextInput
-                        required
-                        placeholder="First Name"
-                        value={form.values.firstName}
-                        onChange={(event) => form.setFieldValue('firstName', event.currentTarget.value)}
-                        error={form.errors.firstName && 'First name is required'}
-                        radius="md"
-                    />
-                    <TextInput
-                        required
-                        placeholder="Last Name"
-                        value={form.values.lastName}
-                        onChange={(event) => form.setFieldValue('lastName', event.currentTarget.value)}
-                        error={form.errors.lastName && 'Last name is required'}
-                        radius="md"
-                    />
+                <Center>
+                    <Title>
+                        SIGN UP
+                    </Title>
+                </Center>
+                <Paper radius="md" p="xl" shadow="md" withBorder>
+                    <Stack>
+                        <Space h="md"/>
+                        <Stack>
+                            <Group grow>
+                                <TextInput
+                                    required
+                                    size="md"
+                                    placeholder="First Name"
+                                    value={form.values.firstName}
+                                    onChange={(event) => form.setFieldValue('firstName', event.currentTarget.value)}
+                                    error={form.errors.firstName && 'First name is required'}
+                                    radius="md"
+                                />
+                                <TextInput
+                                    required
+                                    size="md"
+                                    placeholder="Last Name"
+                                    value={form.values.lastName}
+                                    onChange={(event) => form.setFieldValue('lastName', event.currentTarget.value)}
+                                    error={form.errors.lastName && 'Last name is required'}
+                                    radius="md"
+                                />
+                            </Group>
 
-                    <TextInput
-                        required
-                        placeholder="Address"
-                        value={form.values.address}
-                        onChange={(event) => form.setFieldValue('address', event.currentTarget.value)}
-                        error={form.errors.address && 'Address is required'}
-                        radius="md"
-                    />
+                            <TextInput
+                                required
+                                size="md"
+                                placeholder="Address"
+                                value={form.values.address}
+                                onChange={(event) => form.setFieldValue('address', event.currentTarget.value)}
+                                error={form.errors.address && 'Address is required'}
+                                radius="md"
+                            />
+                            <Group grow>
+                                <TextInput
+                                    required
+                                    size="md"
+                                    placeholder="Email"
+                                    value={form.values.email}
+                                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                                    error={form.errors.email && 'Invalid email'}
+                                    radius="md"
+                                />
+                                <TextInput
+                                    required
+                                    size="md"
+                                    placeholder="Phone"
+                                    value={form.values.phone}
+                                    onChange={(event) => form.setFieldValue('phone', event.currentTarget.value)}
+                                    error={form.errors.phone && 'Invalid phone number'}
+                                    radius="md"
+                                />
+                            </Group>
 
-                    <TextInput
-                        required
-                        placeholder="Email"
-                        value={form.values.email}
-                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                        error={form.errors.email && 'Invalid email'}
-                        radius="md"
-                    />
-                    <TextInput
-                        required
-                        placeholder="Phone"
-                        value={form.values.phone}
-                        onChange={(event) => form.setFieldValue('phone', event.currentTarget.value)}
-                        error={form.errors.phone && 'Invalid phone number'}
-                        radius="md"
-                    />
+                            <PasswordInput
+                                required
+                                size="md"
+                                placeholder="Password"
+                                value={form.values.password}
+                                onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                                error={form.errors.password && 'Password should include at least 6 characters'}
+                                radius="md"
+                            />
+                            <PasswordInput
+                                required
+                                size="md"
+                                placeholder="Confirm Password"
+                                value={form.values.confirmPassword}
+                                onChange={(event) => form.setFieldValue('confirmPassword', event.currentTarget.value)}
+                                error={form.errors.confirmPassword && 'Password does not match'}
+                                radius="md"
+                            />
+                        </Stack>
 
-                    <PasswordInput
-                        required
-                        placeholder="Password"
-                        value={form.values.password}
-                        onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                        error={form.errors.password && 'Password should include at least 6 characters'}
-                        radius="md"
-                    />
-                    <PasswordInput
-                        required
-                        placeholder="Confirm Password"
-                        value={form.values.confirmPassword}
-                        onChange={(event) => form.setFieldValue('confirmPassword', event.currentTarget.value)}
-                        error={form.errors.confirmPassword && 'Password does not match'}
-                        radius="md"
-                    />
-                </Stack>
+                        <Center>
+                            <Group position="apart" mt="xl">
+                                <Button type="submit" color="violet" onClick={handleSignUp}>
+                                    REGISTER
+                                </Button>
+                            </Group>
+                        </Center>
 
-                <Group position="apart" mt="xl">
-                    <Button type="submit" color="violet" onClick={handleSignUp}>
-                        Sign In
-                    </Button>
-                </Group>
+                        <Group position="center" spacing="xs">
+                            <Text ta="center">
+                                Already have an account?
+                            </Text>
+                            <Link to={"/sign-in"}>
+                                <Text color="blue" weight={500}>
+                                    Sign In
+                                </Text>
+                            </Link>
+                        </Group>
+
+                    </Stack>
+                </Paper>
             </Stack>
-            Already have an account? <a href="/sign-in">Login</a>
-        </Paper>
+        </Container>
     )
 };
 

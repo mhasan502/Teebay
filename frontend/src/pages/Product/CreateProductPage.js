@@ -1,5 +1,8 @@
 import React, {useState} from "react";
-import {Paper, Text} from "@mantine/core";
+import {
+    Container,
+    Text
+} from "@mantine/core";
 import SelectProductTitle from "./CreateProduct/SelectProductTitle";
 import SelectProductCategories from "./CreateProduct/SelectProductCategories";
 import SelectProductDescription from "./CreateProduct/SelectProductDescription";
@@ -25,7 +28,7 @@ const CreateProductPage = () => {
     };
 
     const handleChange = (input) => e => {
-        if(input === 'title' || input === 'description'){
+        if (input === 'title' || input === 'description') {
             setValues({...values, [input]: e.target.value});
         } else {
             setValues({...values, [input]: e});
@@ -84,9 +87,9 @@ const CreateProductPage = () => {
         }
     }
     return (
-        <Paper>
+        <Container my={200}>
             {renderStep()}
-        </Paper>
+        </Container>
     )
 };
 

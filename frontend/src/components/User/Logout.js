@@ -1,5 +1,12 @@
-import React from 'react';
-import {Button, Group, Modal, Paper, Space, Text} from "@mantine/core";
+import React from "react";
+import {
+    Button,
+    Group,
+    Modal,
+    Paper,
+    Space,
+    Text
+} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 
 
@@ -14,21 +21,31 @@ const Logout = () => {
     }
 
     return (
-        <div>
-            <Modal opened={opened} onClose={close} centered size="xs">
-                <Paper position="right">
-                    <Text size="xl" weight="500">Are you sure to Logout</Text>
+        <>
+            <Modal opened={opened} onClose={close} centered>
+                <Paper position="right" p={10}>
+                    <Text size="xl" weight="500">
+                        Are you sure you want to log out?
+                    </Text>
+                    <Space h="lg"/>
                     <Space h="lg"/>
                     <Group position="right">
-                        <Button onClick={close} color="pink">Cancel</Button>
-                        <Button onClick={handleLogout} color="violet">Confirm</Button>
+                        <Button onClick={close} color="blue.7">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleLogout} color="red.9">
+                            Confirm
+                        </Button>
                     </Group>
                 </Paper>
             </Modal>
-            <Group position="right">
-                <Button color="pink" onClick={open}>LOGOUT</Button>
+
+            <Group position="right" mt={10} mr={15}>
+                <Button color="pink.9" onClick={open}>
+                    LOGOUT
+                </Button>
             </Group>
-        </div>
+        </>
     )
 };
 

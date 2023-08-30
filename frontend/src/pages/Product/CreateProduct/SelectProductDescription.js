@@ -1,5 +1,13 @@
 import React from "react";
-import {Button, Group, Stack, Text, Textarea} from "@mantine/core";
+import {
+    Button,
+    Center,
+    Group,
+    Space,
+    Stack,
+    Textarea,
+    Title
+} from "@mantine/core";
 
 const SelectProductDescription = ({nextStep, prevStep, handleChange, values}) => {
     const prevHandler = () => {
@@ -12,17 +20,34 @@ const SelectProductDescription = ({nextStep, prevStep, handleChange, values}) =>
 
     return (
         <Stack>
-            <Text size="xl" ta="center">Select description</Text>
+            <Center>
+                <Title>
+                    Select description
+                </Title>
+            </Center>
+
+            <Space h="md"/>
+
             <Textarea
                 required
-                placeholder=""
-                radius="md"
+                size="md"
+                placeholder="Enter description of your product"
                 value={values.description}
                 onChange={handleChange("description")}
+                variant="filled"
+                radius="md"
+                autosize
+                minRows={5}
             />
+            <Space h="md"/>
+
             <Group position="apart">
-                <Button onClick={prevHandler} color="violet">Back</Button>
-                <Button onClick={nextHandler} color="violet">Next</Button>
+                <Button onClick={prevHandler} color="violet">
+                    Back
+                </Button>
+                <Button onClick={nextHandler} color="violet">
+                    Next
+                </Button>
             </Group>
         </Stack>
     )

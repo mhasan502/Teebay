@@ -1,5 +1,16 @@
 import React from "react";
-import {Button, Group, NumberInput, Select, Stack, Text} from "@mantine/core";
+import {
+    Button,
+    Center,
+    Container,
+    Group,
+    NumberInput,
+    Select,
+    Space,
+    Stack,
+    Text,
+    Title
+} from "@mantine/core";
 
 const SelectProductPriceRent = ({nextStep, prevStep, handleChange, values}) => {
     const prevHandler = () => {
@@ -11,43 +22,69 @@ const SelectProductPriceRent = ({nextStep, prevStep, handleChange, values}) => {
 
     return (
         <Stack>
-            <Text size="xl" ta="center">Select price</Text>
-            <NumberInput
-                required
-                placeholder="Purchase price"
-                value={values.price}
-                onChange={handleChange('price')}
-                radius="md"
-                hideControls
-                icon="$"
-            />
-            <Text>Rent</Text>
-            <Group>
+            <Center>
+                <Title>
+                    Select price
+                </Title>
+            </Center>
+
+            <Space h="md"/>
+            <Container>
                 <NumberInput
                     required
-                    placeholder="Rent price"
-                    value={values.rent_price}
-                    onChange={handleChange('rent_price')}
+                    size="md"
+                    placeholder="Enter product price"
+                    value={values.price}
+                    onChange={handleChange('price')}
+                    variant="filled"
                     radius="md"
                     hideControls
                     icon="$"
                 />
-                <Select
-                    required
-                    placeholder="select option"
-                    value={values.rent_type}
-                    onChange={handleChange('rent_type')}
-                    data={[
-                        {value: 'DAILY', label: 'per day'},
-                        {value: 'HOURLY', label: 'per hour'},
-                    ]}
-                    radius="md"
-                />
-            </Group>
+
+                <Space h="lg"/>
+                <Text>
+                    Rent
+                </Text>
+
+                <Group>
+                    <NumberInput
+                        required
+                        size="md"
+                        placeholder="Enter product rent price"
+                        value={values.rent_price}
+                        onChange={handleChange('rent_price')}
+                        variant="filled"
+                        radius="md"
+                        hideControls
+                        icon="$"
+                    />
+                    <Select
+                        required
+                        size="md"
+                        placeholder="select option"
+                        value={values.rent_type}
+                        onChange={handleChange('rent_type')}
+                        data={[
+                            {value: 'DAILY', label: 'per day'},
+                            {value: 'HOURLY', label: 'per hour'},
+                        ]}
+                        variant="filled"
+                        radius="md"
+                    />
+                </Group>
+            </Container>
+
+            <Space h="lg"/>
+            <Space h="lg"/>
 
             <Group position="apart">
-                <Button onClick={prevHandler} color="violet">Back</Button>
-                <Button onClick={nextHandler} color="violet">Next</Button>
+                <Button onClick={prevHandler} color="violet">
+                    Back
+                </Button>
+                <Button onClick={nextHandler} color="violet">
+                    Next
+                </Button>
             </Group>
         </Stack>
     )

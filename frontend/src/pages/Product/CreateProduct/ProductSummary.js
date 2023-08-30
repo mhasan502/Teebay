@@ -1,6 +1,14 @@
 import React from "react";
-import {Button, Group, Stack, Text} from "@mantine/core";
+import {
+    Button,
+    Group,
+    Space,
+    Stack,
+    Text,
+    Title
+} from "@mantine/core";
 import {gql, useMutation} from "@apollo/client";
+import {useNavigate} from "react-router-dom";
 
 
 const CREATE_PRODUCT_MUTATION = gql`
@@ -32,9 +40,11 @@ const CREATE_PRODUCT_MUTATION = gql`
 `;
 
 const ProductSummary = ({prevStep, values}) => {
+    const navigate = useNavigate();
     const [createProductMutation] = useMutation(CREATE_PRODUCT_MUTATION, {
         onCompleted: (data) => {
-            alert(data);
+            alert(data.createProduct.message);
+            navigate(-1);
         },
         onError: (error) => {
             alert(error);
@@ -61,12 +71,15 @@ const ProductSummary = ({prevStep, values}) => {
 
     return (
         <Stack>
-            <Text size="xl" weight="500">Summary</Text>
+            <Title>
+                Summary
+            </Title>
+
             <Text>
                 Title: {values.title}
             </Text>
             <Text>
-                Categories: {values.categories}
+                Categories: {(values.categories) ? values.categories.join(', ') : ''}
             </Text>
             <Text>
                 Description: {values.description}
@@ -74,9 +87,16 @@ const ProductSummary = ({prevStep, values}) => {
             <Text>
                 Price: ${values.price}, To rent: ${values.rent_price} {values.rent_type}
             </Text>
+
+            <Space h="lg"/>
+
             <Group position="apart">
-                <Button onClick={prevHandler} color="violet">Back</Button>
-                <Button onClick={handleCreateProduct} color="violet">Submit</Button>
+                <Button onClick={prevHandler} color="violet">
+                    Back
+                </Button>
+                <Button onClick={handleCreateProduct} color="violet">
+                    Submit
+                </Button>
             </Group>
         </Stack>
     )

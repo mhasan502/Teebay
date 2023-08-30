@@ -1,5 +1,13 @@
 import React, {useState} from "react";
-import {Button, Group, MultiSelect, Stack, Text} from "@mantine/core";
+import {
+    Button,
+    Center,
+    Group,
+    MultiSelect,
+    Space,
+    Stack,
+    Title
+} from "@mantine/core";
 import {gql, useQuery} from "@apollo/client";
 
 
@@ -30,18 +38,34 @@ const SelectProductCategories = ({nextStep, prevStep, handleChange, values}) => 
 
     return (
         <Stack>
-            <Text size="xl" ta="center">Select categories</Text>
+            <Center>
+                <Title>
+                    Select categories
+                </Title>
+            </Center>
+
+            <Space h="md"/>
+
             <MultiSelect
                 required
+                size="md"
                 placeholder="Select a category"
                 value={values.categories}
                 data={categoryTypes.map((category) => ({value: category.categoryName, label: category.categoryName}))}
                 onChange={handleChange("categories")}
+                variant="filled"
                 radius="md"
             />
+
+            <Space h="md"/>
+
             <Group position="apart">
-                <Button onClick={prevHandler} color="violet">Back</Button>
-                <Button onClick={nextHandler} color="violet">Next</Button>
+                <Button onClick={prevHandler} color="violet">
+                    Back
+                </Button>
+                <Button onClick={nextHandler} color="violet">
+                    Next
+                </Button>
             </Group>
         </Stack>
     )
