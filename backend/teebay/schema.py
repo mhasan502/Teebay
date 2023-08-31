@@ -1,6 +1,8 @@
 import graphene
-from product.queries import Query as ProductQuery, Mutation as ProductMutation
-from user.queries import Query as UserQuery, Mutation as UserMutation
+from product.queries import Query as ProductQuery
+from product.mutations import Mutation as ProductMutation
+from user.queries import Query as UserQuery
+from user.mutations import Mutation as UserMutation
 
 
 class Query(UserQuery, ProductQuery, graphene.ObjectType):

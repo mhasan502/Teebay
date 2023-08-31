@@ -1,6 +1,5 @@
 import graphene
 from .models import UserModel
-from .mutations import SignInMutation, SignUpMutation
 from .types import UserType
 
 
@@ -13,8 +12,3 @@ class Query(graphene.ObjectType):
 
     def resolve_user(self, info, email):
         return UserModel.objects.get(email=email)
-
-
-class Mutation(graphene.ObjectType):
-    sign_in = SignInMutation.Field()
-    sign_up = SignUpMutation.Field()

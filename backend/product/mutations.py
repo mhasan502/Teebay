@@ -1,7 +1,6 @@
 import graphene
 from user.models import UserModel
-from .models import ProductModel, CategoryModel
-from .types import ProductType
+from .models import ProductModel, CategoryModel, BuyRentalModel
 
 
 class ProductInput(graphene.InputObjectType):
@@ -78,3 +77,66 @@ class DeleteProductMutation(graphene.Mutation):
 
         message = "Product deleted successfully"
         return cls(message=message)
+
+
+class BuyProductMutation(graphene.Mutation):
+    class Arguments:
+        product_id = graphene.String(required=True)
+        customer_email = graphene.String(required=True)
+
+    message = graphene.String()
+
+    @classmethod
+    def mutate(cls, root, info, product_id, email):
+        product = ProductModel.objects.get(id=product_id)
+        if product in BuyRentalModel.objects.filter(product=product, is_bought=True).first():
+            message = "Product already bought"
+        else:
+            customer = UserModel.objects.get(email=email)
+            buy_rental = BuyRentalModel.objects.create(
+                product=product,
+                customer=customer,
+                is_bought=True
+            )
+            buy_rental.save()
+            message = "Product bought successfully"
+
+        return cls(message=message)
+
+
+class RentProductMutation(graphene.Mutation):
+    class Arguments:
+        product_id = graphene.String(required=True)
+        customer_email = graphene.String(required=True)
+        date_from = graphene.String(required=True)
+        date_to = graphene.String(required=True)
+
+    message = graphene.String()
+
+    @classmethod
+    def mutate(cls, root, info, product_id, email, date_from, date_to):
+        product = ProductModel.objects.get(id=product_id)
+        if product in BuyRentalModel.objects.filter(product=product, is_rented=True).first():
+            message = "Product already rented"
+        else:
+            customer = UserModel.objects.get(email=email)
+            buy_rental = BuyRentalModel.objects.create(
+                product=product,
+                customer=customer,
+                date_from=date_from,
+                date_to=date_to,
+                is_rented=True
+            )
+            buy_rental.save()
+            message = "Product rented successfully"
+
+        return cls(message=message)
+
+
+class Mutation(graphene.ObjectType):
+    create_product = CreateProductMutation.Field()
+    edit_product = EditProductMutation.Field()
+    delete_product = DeleteProductMutation.Field()
+
+    buy_product = BuyProductMutation.Field()
+    rent_product = RentProductMutation.Field()

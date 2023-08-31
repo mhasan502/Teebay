@@ -74,3 +74,8 @@ class SignUpMutation(graphene.Mutation):
         )
 
         return cls(token=token, email=user.email)
+
+
+class Mutation(graphene.ObjectType):
+    sign_in = SignInMutation.Field()
+    sign_up = SignUpMutation.Field()

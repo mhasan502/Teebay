@@ -30,7 +30,10 @@ class Migration(migrations.Migration):
         product_list = [
             {
                 "title": "Apple iPhone 11 Pro Max",
-                "description": "The iPhone 11 Pro Max is the best that Apple can cram into a smartphone - the high-end screen, powerful speakers, upgraded processor all support the huge upgrades to the camera. However, those upgrades don't quite warrant the huge price leap over the iPhone 11 Pro.",
+                "description": "The iPhone 11 Pro Max is the best that Apple can cram into a smartphone - the "
+                               "high-end screen, powerful speakers, upgraded processor all support the huge upgrades "
+                               "to the camera. However, those upgrades don't quite warrant the huge price leap over "
+                               "the iPhone 11 Pro.",
                 "price": 1099.00,
                 "rent_type": "Daily",
                 "rent_price": 10.00,
@@ -39,7 +42,9 @@ class Migration(migrations.Migration):
             },
             {
                 "title": "Samsung Galaxy S20 Ultra",
-                "description": "The Samsung Galaxy S20 Ultra is a beast of a phone with a 6.9-inch 120Hz display, a 108MP camera with super-long zoom and 5G standard, but its hard to justify the price tag.",
+                "description": "The Samsung Galaxy S20 Ultra is a beast of a phone with a 6.9-inch 120Hz display, "
+                               "a 108MP camera with super-long zoom and 5G standard, but its hard to justify the "
+                               "price tag.",
                 "price": 1399.00,
                 "rent_type": "Daily",
                 "rent_price": 10.00,
@@ -81,15 +86,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="CategoryModel",
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID", ),),
                 ("category_name", models.CharField(max_length=100)),
             ],
         ),
@@ -129,6 +126,36 @@ class Migration(migrations.Migration):
                 "ordering": ["-date_posted"],
             },
         ),
+
+        migrations.CreateModel(
+            name="BuyRentalModel",
+            fields=[
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("date_from", models.DateTimeField(blank=True)),
+                ("date_to", models.DateTimeField(blank=True, null=True)),
+                ("is_rented", models.BooleanField(default=False)),
+                ("is_bought", models.BooleanField(default=False)),
+                (
+                    "customer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="user.usermodel"
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.productmodel",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Buy and Rental",
+                "verbose_name_plural": "Buy and Rentals",
+                "ordering": ["-date_from"],
+            },
+        ),
+
         migrations.RunPython(
             code=populate_category_table
         ),

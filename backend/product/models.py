@@ -40,3 +40,27 @@ class ProductModel(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class BuyRentalModel(models.Model):
+    """
+    Buy and Rental model for storing rental and buy data
+    """
+
+    id = models.AutoField(primary_key=True)
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+    customer = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+
+    date_from = models.DateField(null=False, blank=True)
+    date_to = models.DateField(null=True, blank=True)
+
+    is_rented = models.BooleanField(default=False)
+    is_bought = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-date_from']
+        verbose_name = 'Buy and Rental'
+        verbose_name_plural = 'Buy and Rentals'
+
+    def __str__(self):
+        return f'{self.product.title} ({self.date_from} - {self.date_to})'
