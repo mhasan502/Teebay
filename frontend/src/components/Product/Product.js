@@ -6,16 +6,14 @@ import {
     Text,
     Paper,
     Space,
-    ActionIcon,
-    Tooltip,
     Title,
     Container,
     Stack
 } from "@mantine/core"
 import {useDisclosure} from "@mantine/hooks";
 import {gql, useMutation} from "@apollo/client";
-import {Link, useNavigate} from "react-router-dom";
-import {IconEdit, IconTrash} from "@tabler/icons-react";
+import {useNavigate} from "react-router-dom";
+import OwnerAction from "./OwnerAction";
 
 
 const DELETE_PRODUCT_QUERY = gql`
@@ -26,9 +24,9 @@ const DELETE_PRODUCT_QUERY = gql`
     }
 `;
 
-const Product = ({product}) => {
+const Product = ({product, owner = false}) => {
     const navigate = useNavigate();
-    const [openedDeleteModal, {open, close}] = useDisclosure(false);
+    const [openedDeleteModal, {open: openDeleteModal, close: closeDeleteModal}] = useDisclosure(false);
 
     const [deleteProductMutation] = useMutation(DELETE_PRODUCT_QUERY, {
         onCompleted: (data) => {
@@ -51,15 +49,15 @@ const Product = ({product}) => {
     return (
         <Container>
             <Paper p="xl" shadow="md" withBorder>
-                <Modal opened={openedDeleteModal} onClose={close} centered padding="lg">
+                <Modal opened={openedDeleteModal} onClose={closeDeleteModal} centered padding="lg">
                     <Paper position="right" p={10}>
                         <Text size="xl" weight="500">
                             Are you sure you want to delete this product?
                         </Text>
-                        <Space h="lg"/>
-                        <Space h="lg"/>
+                        <Space h="xl"/>
+                        <Space h="xl"/>
                         <Group position="right">
-                            <Button onClick={close} color="blue.7">
+                            <Button onClick={closeDeleteModal} color="blue.7">
                                 Cancel
                             </Button>
                             <Button onClick={handleDelete} color="red.9">
@@ -68,26 +66,13 @@ const Product = ({product}) => {
                         </Group>
                     </Paper>
                 </Modal>
+
                 <Stack spacing="xs">
                     <Group position="apart">
                         <Title order={3}>
                             {product.title}
                         </Title>
-
-                        <Group position="right">
-                            <Link to="/edit-product" state={{product: product}}>
-                                <Tooltip label="Edit" position="bottom" withArrow>
-                                    <ActionIcon size="lg" color="blue.7" variant="filled" radius="md">
-                                        <IconEdit size="1.625rem"/>
-                                    </ActionIcon>
-                                </Tooltip>
-                            </Link>
-                            <Tooltip label="Delete" position="bottom" withArrow>
-                                <ActionIcon size="lg" color="red.9" variant="filled" radius="md" onClick={open}>
-                                    <IconTrash size="1.625rem"/>
-                                </ActionIcon>
-                            </Tooltip>
-                        </Group>
+                        {owner ? (<OwnerAction product={product} deleteConfirm={openDeleteModal}/>) : null}
                     </Group>
 
 

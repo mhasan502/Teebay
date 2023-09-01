@@ -97,7 +97,7 @@ const SignInPage = () => {
 
                         <Center>
                             <Group position="apart" mt="xl">
-                                <Button type="submit" color="violet" onClick={handleSignIn}>
+                                <Button type="submit" color="violet.9" onClick={handleSignIn}>
                                     LOGIN
                                 </Button>
                             </Group>
@@ -108,7 +108,7 @@ const SignInPage = () => {
                                 Don't have an account?
                             </Text>
                             <Link to="/sign-up">
-                                <Text color="blue" weight={500}>
+                                <Text color="blue.7" weight={500}>
                                     Signup
                                 </Text>
                             </Link>

@@ -79,10 +79,10 @@ const SelectProductPriceRent = ({nextStep, prevStep, handleChange, values}) => {
             <Space h="lg"/>
 
             <Group position="apart">
-                <Button onClick={prevHandler} color="violet">
+                <Button onClick={prevHandler} color="violet.9">
                     Back
                 </Button>
-                <Button onClick={nextHandler} color="violet">
+                <Button onClick={nextHandler} color="violet.9">
                     Next
                 </Button>
             </Group>

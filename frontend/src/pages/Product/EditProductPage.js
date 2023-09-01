@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {
+    ActionIcon,
     Button,
     Container,
     Group,
@@ -15,6 +16,7 @@ import {
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {gql, useMutation, useQuery} from "@apollo/client";
+import { IconX } from '@tabler/icons-react';
 
 
 const ALL_CATEGORY_TYPES_QUERY = gql`
@@ -67,6 +69,9 @@ const EditProductPage = () => {
     useQuery(ALL_CATEGORY_TYPES_QUERY, {
         onCompleted: (data) => {
             setCategoryTypes(data.allCategoryTypes)
+        },
+        onError: (error) => {
+            alert(error);
         }
     });
 
@@ -110,6 +115,11 @@ const EditProductPage = () => {
 
     return (
         <Container my={100}>
+            <Group position="right">
+                <ActionIcon size="lg" variant="filled" onClick={() => navigate(-1)}>
+                    <IconX/>
+                </ActionIcon>
+            </Group>
             <Stack spacing="xs">
                 <Text>
                     Title
@@ -214,7 +224,7 @@ const EditProductPage = () => {
             <Space h="lg"/>
 
             <Group position="right">
-                <Button type="submit" color="violet" onClick={handleEditProduct}>
+                <Button type="submit" color="violet.9" onClick={handleEditProduct}>
                     Edit Product
                 </Button>
             </Group>

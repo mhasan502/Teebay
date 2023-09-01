@@ -167,7 +167,7 @@ const SignUpPage = () => {
 
                         <Center>
                             <Group position="apart" mt="xl">
-                                <Button type="submit" color="violet" onClick={handleSignUp}>
+                                <Button type="submit" color="violet.9" onClick={handleSignUp}>
                                     REGISTER
                                 </Button>
                             </Group>

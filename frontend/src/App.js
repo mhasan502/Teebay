@@ -1,9 +1,10 @@
 import SignInPage from "./pages/User/SignInPage";
 import SingUpPage from "./pages/User/SignUpPage";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import MyProductPage from "./pages/Product/MyProductPage";
+import ProductPage from "./pages/Product/ProductPage";
 import EditProductPage from "./pages/Product/EditProductPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
+import ProductDetailsPage from "./pages/Product/ProductDetailsPage";
 
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={
-                    localStorage.getItem("token") ? <MyProductPage/> : <Navigate replace={true} to="/sign-in"/>
+                    localStorage.getItem("token") ? <ProductPage/> : <Navigate replace={true} to="/sign-in"/>
                 }/>
                 <Route path="/sign-in" element={
                     !localStorage.getItem("token") ? <SignInPage/> : <Navigate replace={true} to="/"/>
@@ -20,8 +21,10 @@ function App() {
                     !localStorage.getItem("token") ? <SingUpPage/> : <Navigate replace={true} to="/"/>
                 }/>
 
-                <Route path="/edit-product" element={<EditProductPage/>}/>
                 <Route path="/create-product" element={<CreateProductPage/>}/>
+                <Route path="/edit-product" element={<EditProductPage/>}/>
+                <Route path="/product-details/:id" element={<ProductDetailsPage/>}/>
+
             </Routes>
         </BrowserRouter>
     )

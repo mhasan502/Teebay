@@ -3,11 +3,11 @@ import {
     Container,
     Text
 } from "@mantine/core";
-import SelectProductTitle from "./CreateProduct/SelectProductTitle";
-import SelectProductCategories from "./CreateProduct/SelectProductCategories";
-import SelectProductDescription from "./CreateProduct/SelectProductDescription";
-import SelectProductPriceRent from "./CreateProduct/SelectProductPriceRent";
-import ProductSummary from "./CreateProduct/ProductSummary";
+import SelectProductTitle from "./CreateProductPage/SelectProductTitle";
+import SelectProductCategories from "./CreateProductPage/SelectProductCategories";
+import SelectProductDescription from "./CreateProductPage/SelectProductDescription";
+import SelectProductPriceRent from "./CreateProductPage/SelectProductPriceRent";
+import ProductSummary from "./CreateProductPage/ProductSummary";
 
 const CreateProductPage = () => {
     const [step, setStep] = useState(1);

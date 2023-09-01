@@ -37,7 +37,7 @@ const SelectProductTitle = ({nextStep, handleChange, values}) => {
             <Space h="md"/>
 
             <Group position="right">
-                <Button onClick={nextHandler} color="violet">
+                <Button onClick={nextHandler} color="violet.9">
                     Next
                 </Button>
             </Group>

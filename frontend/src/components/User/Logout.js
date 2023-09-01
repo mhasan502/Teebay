@@ -11,7 +11,7 @@ import {useDisclosure} from "@mantine/hooks";
 
 
 const Logout = () => {
-    const [opened, {open, close}] = useDisclosure(false);
+    const [openedLogoutModal, {open, close}] = useDisclosure(false);
 
     // Clearing token & email to log out user
     const handleLogout = () => {
@@ -22,13 +22,13 @@ const Logout = () => {
 
     return (
         <>
-            <Modal opened={opened} onClose={close} centered>
+            <Modal opened={openedLogoutModal} onClose={close} centered padding="lg">
                 <Paper position="right" p={10}>
                     <Text size="xl" weight="500">
                         Are you sure you want to log out?
                     </Text>
-                    <Space h="lg"/>
-                    <Space h="lg"/>
+                    <Space h="xl"/>
+                    <Space h="xl"/>
                     <Group position="right">
                         <Button onClick={close} color="blue.7">
                             Cancel

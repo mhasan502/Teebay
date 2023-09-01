@@ -91,10 +91,10 @@ const ProductSummary = ({prevStep, values}) => {
             <Space h="lg"/>
 
             <Group position="apart">
-                <Button onClick={prevHandler} color="violet">
+                <Button onClick={prevHandler} color="violet.9">
                     Back
                 </Button>
-                <Button onClick={handleCreateProduct} color="violet">
+                <Button onClick={handleCreateProduct} color="violet.9">
                     Submit
                 </Button>
             </Group>
