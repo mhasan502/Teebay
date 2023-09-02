@@ -24,4 +24,5 @@ const MyProductPage = ({products}) => {
     )
 };
 
+
 export default MyProductPage;

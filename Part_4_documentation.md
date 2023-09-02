@@ -21,6 +21,7 @@ The project structure is as follows:
 │   ├───models.py       # contains the product and category model
 │   ├───mutations.py    # contains the product and category mutations
 │   ├───queries.py      # contains the product and category queries
+│   ├───tests.py        # contains the product and category tests
 │   └───types.py        # contains the product and category types
 ├───teebay
 │   ├───asgi.py         # async server gateway interface
@@ -33,6 +34,7 @@ The project structure is as follows:
 │   ├───models.py       # contains the user model
 │   ├───mutations.py    # contains the user mutations
 │   ├───queries.py      # contains the user queries
+│   ├───tests.py        # contains the product and category tests
 │   └───types.py        # contains the user types
 ├───manage.py           # contains the Django management commands
 └───requirements.txt    # contains the project dependencies
@@ -41,19 +43,26 @@ The project structure is as follows:
 Entrypoint for the GraphQL API is at `http://localhost:8000/graphql/`
 #### Queries
 1. Product Queries
-   * `products` - Inputs: `id` Returns: `id, title, description, price, rentPrice, rentType, category, datePosted`
+   * `product` - Inputs: `id` Returns: `id, title, description, price, rentPrice, rentType, category, datePosted`
    * `allProductsCreatedByUser` - Inputs: `None` Returns: `[id, title, description, price, rentPrice, rentType, category, datePosted]`
-   * `categoryTypes` - Inputs: `None` Returns: `[id, category_name]`
-   * `rentTypes` - Inputs: `None` Returns: `[id, rent_type]`
+   * `allCategoryTypes` - Inputs: `None` Returns: `[id, category_name]`
+   * `allRentTypes` - Inputs: `None` Returns: `[id, rent_type]`
+   * `allProducts` - Inputs: `None` Returns: `[id, title, description, price, rentPrice, rentType, category, datePosted]`
+   * `soldProductsForUser` - Inputs: `email` Returns: `[id, title, description, price, rentPrice, rentType, category, datePosted]`
+   * `boughtProductsForUser` - Inputs: `email` Returns: `[id, title, description, price, rentPrice, rentType, category, datePosted]`
+   * `lentProductsForUser` - Inputs: `email` Returns: `[id, title, description, price, rentPrice, rentType, category, datePosted]`
+   * `borrowedProductsForUser` - Inputs: `email` Returns: `[id, title, description, price, rentPrice, rentType, category, datePosted]`
 2. User Queries
    *  `allUsers` - Inputs: `None` Returns: `[id, firstName, lastName, address, email, phone]`
    *  `user` - Inputs: `email` Returns: `id, firstName, lastName, address, email, phone`
 
 #### Mutations
 1. Product Mutations
-   * `createProduct` - Inputs: `title, description, price, rentPrice, rentType, category` Returns: `id, title, description, price, rentPrice, rentType, category, datePosted`
-   * `editProduct` - Inputs: `id, title, description, price, rentPrice, rentType, category` Returns: `id, title, description, price, rentPrice, rentType, category, datePosted`
-   * `deleteProduct` - Inputs: `id` Returns: `id`
+   * `createProduct` - Inputs: `title, description, price, rentPrice, rentType, category` Returns: `message`
+   * `editProduct` - Inputs: `id, title, description, price, rentPrice, rentType, category` Returns: `message`
+   * `deleteProduct` - Inputs: `id` Returns: `message`
+   * `buyProduct` - Inputs: `id` Returns: `message`
+   * `rentProduct` - Inputs: `id` Returns: `message`
 2. User Mutations
    * `signIn` - Inputs: `email, password` Returns: `token, email`
    * `signUp` - Inputs: `firstName, lastName, address, email, phone, password` Returns: `token, email`
@@ -71,7 +80,7 @@ Entrypoint for the GraphQL API is at `http://localhost:8000/graphql/`
 
 ### Project Structure
 
-The project is consists of 2 Compoenents called `Product` and `User`
+The project is consists of 2 Components called `Product` and `User`
 
 * `Product` contains the CRUD operations for the product
 * `User` contains the user login and registration
@@ -91,24 +100,48 @@ src                                     # contains the source files
 ├─App.js                                # contains the app component with Routing
 ├─App.test.js                           # contains the app tests
 ├─components 
-│ ├─Product                             # contains the product components
-│ │ └─Product.js                        # contains the product component
+│ ├─Product                             # contains the (edit & delete) and product components
+│ │ ├─OwnerAction.js
+│ │ └─Product.js
 │ └─User
 │   └─Logout.js
+├─mutations
+│ ├─ProductMutations                    # contains the product mutations
+│ │ ├─BuyProductMutation.js
+│ │ ├─CreateProductMutation.js
+│ │ ├─DeleteProductMutation.js
+│ │ ├─EditProductMutation.js
+│ │ └─RentProductMutation.js
+│ └─UserMutations                       # contains the user mutations
+│   ├─SignInMutation.js
+│   └─SignUpMutation.js
 ├─pages
 │ ├─Product
 │ │ ├─CreateProductPage.js              # contains the create product page
 │ │ ├─EditProduct.js                    # contains the edit product page
 │ │ ├─ListProduct.js                    # contains the list product page
-│ │ └─CreateProduct                     # contains the product components for multi-step form
-│ │   ├─ProductSummary.js               # contains the product summary after inputing all the data
-│ │   ├─SelectProductCategories.js      # contains the product categories input
-│ │   ├─SelectProductDescription.js     # contains the product description input
-│ │   ├─SelectProductPriceRent.js       # contains the product price and rent input
-│ │   └─SelectProductTitle.js           # contains the product title input
+│ │ ├─CreateProduct                     # contains the product components for multi-step form
+│ │ │ ├─ProductSummary.js
+│ │ │ ├─SelectProductCategories.js
+│ │ │ ├─SelectProductDescription.js
+│ │ │ ├─SelectProductPriceRent.js
+│ │ │ └─SelectProductTitle.js
+│ │ └─ProductPage    
+│ │   ├─AllProductPage.js               # contains the all product page
+│ │   └─MyProductPage.js                # contains the all product page
 │ └─User
 │   ├─SignInPage.js                     # contains the sign in page
 │   └─SignUpPage.js                     # contains the sign up page
+├─quieries
+│ └─ProductQueries                      # contains the product queries
+│   ├─AllCategoryTypesQuery.js
+│   ├─BorrowedProductsQuery.js
+│   ├─BoughtProductsQuery.js
+│   ├─GetProductQuery.js
+│   ├─LentProductsQuery.js
+│   ├─ListOfAllProductsQuery.js
+│   ├─ListOfCreatedProductByUserQuery.js
+│   └─SoldProductsQuery.js
 ├─index.css
 ├─index.js
 ├─logo.svg
@@ -132,7 +165,7 @@ src                                     # contains the source files
     * Delete Product
     * List Product
 
-2. User authentication
+3. User authentication
    * Sign in    - `token` and `email` is stored in the local storage
    * Sign up    - `token` and `email` is stored in the local storage
    * Logout     - `token` and `email` is removed from the local storage

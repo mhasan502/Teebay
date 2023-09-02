@@ -12,12 +12,12 @@ class Migration(migrations.Migration):
     def populate_category_table(self, schema_editor):
         CategoryModel = self.get_model("product", "CategoryModel")
         category_list = [
-            "ELECTRONICS",
-            "FURNITURE",
-            "HOME APPLIANCES",
-            "SPORTING GOODS",
-            "OUTDOOR",
-            "TOYS",
+            "Electronics",
+            "Furniture",
+            "Home Appliances",
+            "Sporting Goods",
+            "Outdoor",
+            "Toys",
         ]
         for category in category_list:
             CategoryModel.objects.create(category_name=category)
@@ -29,44 +29,63 @@ class Migration(migrations.Migration):
 
         product_list = [
             {
-                "title": "Apple iPhone 11 Pro Max",
-                "description": "The iPhone 11 Pro Max is the best that Apple can cram into a smartphone - the "
-                               "high-end screen, powerful speakers, upgraded processor all support the huge upgrades "
-                               "to the camera. However, those upgrades don't quite warrant the huge price leap over "
-                               "the iPhone 11 Pro.",
+                "title": "Apple iPhone 14 Pro Max",
+                "description": "The iPhone 14 and iPhone 14 Plus were released in September 2022. They have a "
+                               "6.1-inch and 6.7-inch Super Retina XDR display, respectively, with a resolution of "
+                               "2532 x 1170 pixels. They are powered by the A15 Bionic chip and have 6GB of RAM. The "
+                               "rear camera system is 12MP dual-camera, while the front camera is 12MP. They come in "
+                               "128GB, 256GB, and 512GB storage capacities. The main difference between the iPhone 14 "
+                               "and iPhone 14 Plus is the size. The iPhone 14 is smaller and lighter, "
+                               "while the iPhone 14 Plus is larger and has a longer battery life.",
                 "price": 1099.00,
                 "rent_type": "Daily",
                 "rent_price": 10.00,
-                "category": [CategoryModel.objects.get(category_name="ELECTRONICS")],
+                "category": [CategoryModel.objects.get(category_name="Electronics")],
                 "owner": UserModel.objects.get(id=1),
             },
             {
-                "title": "Samsung Galaxy S20 Ultra",
-                "description": "The Samsung Galaxy S20 Ultra is a beast of a phone with a 6.9-inch 120Hz display, "
-                               "a 108MP camera with super-long zoom and 5G standard, but its hard to justify the "
-                               "price tag.",
-                "price": 1399.00,
+                "title": "Samsung Galaxy S23 Ultra",
+                "description": "The Samsung Galaxy S23 Ultra is a high-end smartphone that offers a lot of features "
+                               "and performance. It has a large, high-resolution display, a powerful processor, "
+                               "and a versatile camera system. It is also water and dust resistant, making it durable "
+                               "for everyday use. The Galaxy S23 Ultra is priced starting at $1199.99 in the United "
+                               "States. It is available for purchase from Samsung and major retailers.",
+                "price": 1199.00,
                 "rent_type": "Daily",
-                "rent_price": 10.00,
-                "category": [CategoryModel.objects.get(category_name="ELECTRONICS")],
+                "rent_price": 19.00,
+                "category": [CategoryModel.objects.get(category_name="Electronics")],
                 "owner": UserModel.objects.get(id=2),
             },
             {
                 "title": "Plastic Chair",
-                "description": "Plastic Chair",
-                "price": 10.00,
+                "description": "A chair is a type of seat, typically designed for one person and consisting of one or "
+                               "more legs, a flat or slightly angled seat and a back-rest. They may be made of wood, "
+                               "metal, or synthetic materials, and may be padded or upholstered in various colors and "
+                               "fabrics. Chairs vary in design. An armchair has armrests fixed to the seat; a "
+                               "recliner is upholstered and features a mechanism that lowers the chair's back and "
+                               "raises into place a footrest; a rocking chair has legs fixed to two long curved "
+                               "slats; and a wheelchair has wheels fixed to an axis under the seat.",
+                "price": 25.00,
                 "rent_type": "Daily",
                 "rent_price": 1.00,
-                "category": [CategoryModel.objects.get(category_name="FURNITURE")],
+                "category": [
+                    CategoryModel.objects.get(category_name="Furniture"),
+                    CategoryModel.objects.get(category_name="Home Appliances")
+                ],
                 "owner": UserModel.objects.get(id=1),
             },
             {
-                "title": "Flamingo Toys",
-                "description": "Flamingo Toys",
+                "title": "Barbie Doll",
+                "description": "Barbie is a fashion doll created by American businesswoman Ruth Handler, manufactured "
+                               "by American toy company Mattel and launched in 1959. The toy is the figurehead of the "
+                               "Barbie brand that includes a range of fashion dolls and accessories. Barbie has been "
+                               "an important part of the toy fashion doll market for over six decades. Mattel has "
+                               "sold over a billion Barbie dolls, making it the company's largest and most profitable "
+                               "line.",
                 "price": 10.00,
                 "rent_type": "Daily",
                 "rent_price": 1.00,
-                "category": [CategoryModel.objects.get(category_name="TOYS")],
+                "category": [CategoryModel.objects.get(category_name="Toys")],
                 "owner": UserModel.objects.get(id=1),
             },
         ]

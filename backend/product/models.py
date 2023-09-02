@@ -51,8 +51,8 @@ class BuyRentalModel(models.Model):
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
     customer = models.ForeignKey(UserModel, on_delete=models.CASCADE)
 
-    date_from = models.DateField(null=False, blank=True)
-    date_to = models.DateField(null=True, blank=True)
+    date_from = models.DateField(blank=True, null=True)
+    date_to = models.DateField(blank=True, null=True)
 
     is_rented = models.BooleanField(default=False)
     is_bought = models.BooleanField(default=False)

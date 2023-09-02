@@ -12,6 +12,7 @@ import {
     Title
 } from "@mantine/core";
 
+
 const SelectProductPriceRent = ({nextStep, prevStep, handleChange, values}) => {
     const prevHandler = () => {
         prevStep();
@@ -89,5 +90,6 @@ const SelectProductPriceRent = ({nextStep, prevStep, handleChange, values}) => {
         </Stack>
     )
 };
+
 
 export default SelectProductPriceRent;

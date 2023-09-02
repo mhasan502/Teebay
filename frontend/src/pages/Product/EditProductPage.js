@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import {
     ActionIcon,
     Button,
@@ -15,55 +15,17 @@ import {
     TextInput
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {gql, useMutation, useQuery} from "@apollo/client";
+import {useMutation, useQuery} from "@apollo/client";
 import { IconX } from '@tabler/icons-react';
-
-
-const ALL_CATEGORY_TYPES_QUERY = gql`
-    query  {
-        allCategoryTypes{
-            id
-            categoryName
-        }
-    }
-`;
-
-const EDIT_PRODUCT_MUTATION = gql`
-    mutation EditProductMutation(
-        $id: String!, 
-        $title: String!, 
-        $description: String!, 
-        $price: String!, 
-        $category: [String!], 
-        $rentType: String!, 
-        $rentPrice: String!,
-        $userEmail: String!
-    )
-    {
-        editProduct(
-            id: $id,
-            data: {
-                title: $title,
-                description: $description,
-                price: $price,
-                category: $category,
-                rentType: $rentType,
-                rentPrice: $rentPrice,
-                userEmail: $userEmail
-            }
-        )
-        {
-            message
-        }
-    }
-`;
+import ALL_CATEGORY_TYPES_QUERY from "../../queries/ProductQueries/AllCategoryTypesQuery";
+import EDIT_PRODUCT_MUTATION from "../../mutations/ProductMutations/EditProductMutation";
+import GET_PRODUCT_QUERY from "../../queries/ProductQueries/GetProductQuery";
 
 
 const EditProductPage = () => {
+    const [product, setProduct] = useState([]);
     const navigate = useNavigate();
-    const location = useLocation();
-    const {product} = location.state;
-
+    const product_id = parseInt(useParams().id);
     const [categoryTypes, setCategoryTypes] = useState([]);
 
     useQuery(ALL_CATEGORY_TYPES_QUERY, {
@@ -77,25 +39,47 @@ const EditProductPage = () => {
 
     const [editProductMutation] = useMutation(EDIT_PRODUCT_MUTATION, {
         onCompleted: (data) => {
-            console.log(data);
-            navigate(-1);
+            alert(data.editProduct.message);
         },
         onError: (error) => {
             alert(error);
         }
     });
 
+    const getProductQuery = useQuery(GET_PRODUCT_QUERY, {
+        variables: {
+            id: product_id
+        },
+        onCompleted: (data) => {
+            form.values.title = data.product.title;
+            form.values.description = data.product.description;
+            form.values.price = parseFloat(data.product.price);
+            form.values.rentPrice = parseFloat(data.product.rentPrice);
+            form.values.rentType = data.product.rentType;
+            form.values.category = data.product.category.map((category) => category.id);
+            console.log(form.values)
+        },
+        onError: (error) => {
+            alert(error);
+        }
+    });
 
     const form = useForm({
         initialValues: {
-            title: product.title,
-            category: product.category.map((category) => category.id),
-            description: product.description,
-            price: product.price,
-            rentPrice: product.rentPrice,
-            rentType: product.rentType,
+            title: '',
+            category: '',
+            description: '',
+            price: '',
+            rentPrice: '',
+            rentType: '',
         },
     });
+
+    useEffect(() => {
+        if (getProductQuery.data) {
+            setProduct(getProductQuery.data.product);
+        }
+    }, [getProductQuery.data]);
 
     const handleEditProduct = async () => {
         await editProductMutation({
@@ -178,7 +162,7 @@ const EditProductPage = () => {
                             required
                             size="md"
                             placeholder="Enter product price"
-                            defaultValue={parseFloat(form.values.price)}
+                            value={form.values.price}
                             onChange={(event) => form.setFieldValue("price", event)}
                             variant="filled"
                             radius="md"
@@ -195,7 +179,7 @@ const EditProductPage = () => {
                                 required
                                 size="md"
                                 placeholder="Enter product rent price"
-                                defaultValue={parseFloat(form.values.rentPrice)}
+                                value={form.values.rentPrice}
                                 onChange={(event) => form.setFieldValue("rentPrice", event)}
                                 variant="filled"
                                 radius="md"

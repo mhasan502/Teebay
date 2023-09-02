@@ -40,13 +40,12 @@ const Logout = () => {
                 </Paper>
             </Modal>
 
-            <Group position="right" mt={10} mr={15}>
-                <Button color="pink.9" onClick={open}>
-                    LOGOUT
-                </Button>
-            </Group>
+            <Button color="pink.9" onClick={open}>
+                Logout
+            </Button>
         </>
     )
 };
+
 
 export default Logout;

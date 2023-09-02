@@ -1,37 +1,46 @@
 import React, {useState} from "react";
-import {useParams} from "react-router-dom";
-import {gql, useQuery} from "@apollo/client";
-import {Button, Container, Group, Modal, Paper, Space, Stack, Text, Title} from "@mantine/core";
+import {useNavigate, useParams} from "react-router-dom";
+import {useMutation, useQuery} from "@apollo/client";
+import {ActionIcon, Button, Container, Group, Modal, Paper, Space, Stack, Text, Title} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import {DatePickerInput} from "@mantine/dates";
-import {IconCalendar} from "@tabler/icons-react";
+import {IconCalendar, IconX} from "@tabler/icons-react";
+import GET_PRODUCT_QUERY from "../../queries/ProductQueries/GetProductQuery";
+import BUY_PRODUCT_MUTATION from "../../mutations/ProductMutations/BuyProductMutation";
+import RENT_PRODUCT_MUTATION from "../../mutations/ProductMutations/RentProductMutation";
 
-const GET_PRODUCT_QUERY = gql`
-    query product($id: Int!) {
-        product(id: $id) {
-            id
-            title
-            description
-            price
-            rentPrice
-            rentType
-            category {
-              id
-              categoryName
-            }
-        }
-    }
-`;
 
 const ProductDetailsPage = () => {
+    const navigate = useNavigate();
     const [product, setProduct] = useState([]);
     const [rentPeriod, setRentPeriod] = useState([]);
     const [openedBuyModal, {open: openBuyModal, close: closeBuyModal}] = useDisclosure(false);
     const [openedRentModal, {open: openRentModal, close: closeRentModal}] = useDisclosure(false);
 
+    const product_id = parseInt(useParams().id);
+    const [buyProductMutation] = useMutation(BUY_PRODUCT_MUTATION, {
+        onCompleted: (data) => {
+            alert(data.buyProduct.message);
+            closeBuyModal();
+        },
+        onError: (error) => {
+            alert(error);
+        }
+    });
+
+    const [rentProductMutation] = useMutation(RENT_PRODUCT_MUTATION, {
+        onCompleted: (data) => {
+            alert(data.rentProduct.message);
+            closeRentModal();
+        },
+        onError: (error) => {
+            alert(error);
+        }
+    });
+
     useQuery(GET_PRODUCT_QUERY, {
         variables: {
-            id: parseInt(useParams().id)
+            id: product_id
         },
         onCompleted: (data) => {
             setProduct(data.product);
@@ -48,6 +57,26 @@ const ProductDetailsPage = () => {
         return (day >= 5 && day <= 10 && month === 9 && year === 2023);
     };
 
+    const handleBuy = async () => {
+        await buyProductMutation({
+            variables: {
+                productId: product_id.toString(),
+                customerEmail: localStorage.getItem('email')
+            }
+        });
+    };
+
+    const handleRent = async () => {
+        await rentProductMutation({
+            variables: {
+                productId: product_id.toString(),
+                customerEmail: localStorage.getItem('email'),
+                dateFrom: rentPeriod[0].toLocaleDateString('en-CA'),
+                dateTo: rentPeriod[1].toLocaleDateString('en-CA')
+            }
+        });
+    };
+
 
     return (
         <>
@@ -60,16 +89,15 @@ const ProductDetailsPage = () => {
                     <Space h="xl"/>
                     <Group position="right">
                         <Button color="red.9" onClick={closeBuyModal}>Cancel</Button>
-                        <Button color="blue.7" onClick={closeBuyModal}>Buy</Button>
+                        <Button color="blue.7" onClick={handleBuy}>Buy</Button>
                     </Group>
                 </Paper>
             </Modal>
 
 
-
             <Modal opened={openedRentModal} onClose={closeRentModal} centered padding="lg" size="lg">
                 <Paper position="right">
-                    <Text size="xl" weight={500}>
+                    <Text size="xl" weight={500} ta="center">
                         Rental Period
                     </Text>
                     <Space h="xl"/>
@@ -85,6 +113,8 @@ const ProductDetailsPage = () => {
                         label="Enter rental period"
                         icon={<IconCalendar size="1.2rem"/>}
                         excludeDate={reservedDate}
+                        locale="UTC+6"
+                        valueFormat="YYYY-MM-DD"
                         allowSingleDateInRange
                         dropdownType="modal"
                         type="range"
@@ -98,14 +128,20 @@ const ProductDetailsPage = () => {
                     <Space h="xl"/>
                     <Group position="right">
                         <Button color="red.9" onClick={closeRentModal}>Go Back</Button>
-                        <Button color="blue.7" onClick={
-                            () => console.log(rentPeriod)
-                        }>Confirm Rent</Button>
+                        <Button color="blue.7" onClick={handleRent}>
+                            Confirm Rent
+                        </Button>
                     </Group>
                 </Paper>
             </Modal>
 
             <Container size="sm" px="xs" my={100}>
+                <Group position="right">
+                    <ActionIcon size="lg" variant="filled" onClick={() => navigate(-1)}>
+                        <IconX/>
+                    </ActionIcon>
+                </Group>
+                <Space h="lg"/>
                 <Paper p="xl" shadow="xs" withBorder>
                     <Stack>
                         <Title order={1}>
@@ -142,5 +178,6 @@ const ProductDetailsPage = () => {
         </>
     )
 };
+
 
 export default ProductDetailsPage;

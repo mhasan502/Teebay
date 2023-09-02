@@ -8,17 +8,9 @@ import {
     Stack,
     Title
 } from "@mantine/core";
-import {gql, useQuery} from "@apollo/client";
+import {useQuery} from "@apollo/client";
+import ALL_CATEGORY_TYPES_QUERY from "../../../queries/ProductQueries/AllCategoryTypesQuery";
 
-
-const ALL_CATEGORY_TYPES_QUERY = gql`
-    query  {
-        allCategoryTypes{
-            id
-            categoryName
-        }
-    }
-`;
 
 const SelectProductCategories = ({nextStep, prevStep, handleChange, values}) => {
     const [categoryTypes, setCategoryTypes] = useState([]);
@@ -70,5 +62,6 @@ const SelectProductCategories = ({nextStep, prevStep, handleChange, values}) => 
         </Stack>
     )
 };
+
 
 export default SelectProductCategories;

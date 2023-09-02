@@ -9,6 +9,7 @@ import {
     Title
 } from "@mantine/core";
 
+
 const SelectProductDescription = ({nextStep, prevStep, handleChange, values}) => {
     const prevHandler = () => {
         prevStep();
@@ -52,5 +53,6 @@ const SelectProductDescription = ({nextStep, prevStep, handleChange, values}) =>
         </Stack>
     )
 };
+
 
 export default SelectProductDescription;

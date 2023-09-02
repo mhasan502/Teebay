@@ -9,6 +9,7 @@ import SelectProductDescription from "./CreateProductPage/SelectProductDescripti
 import SelectProductPriceRent from "./CreateProductPage/SelectProductPriceRent";
 import ProductSummary from "./CreateProductPage/ProductSummary";
 
+
 const CreateProductPage = () => {
     const [step, setStep] = useState(1);
     const [values, setValues] = useState({
@@ -92,5 +93,6 @@ const CreateProductPage = () => {
         </Container>
     )
 };
+
 
 export default CreateProductPage;

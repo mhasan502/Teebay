@@ -7,37 +7,10 @@ import {
     Text,
     Title
 } from "@mantine/core";
-import {gql, useMutation} from "@apollo/client";
+import {useMutation} from "@apollo/client";
 import {useNavigate} from "react-router-dom";
+import CREATE_PRODUCT_MUTATION from "../../../mutations/ProductMutations/CreateProductMutation";
 
-
-const CREATE_PRODUCT_MUTATION = gql`
-    mutation CreateProductMutation(
-        $title: String!, 
-        $description: String!, 
-        $price: String!,
-        $category: [String!],
-        $rentType: String!,
-        $rentPrice: String!,
-        $userEmail: String!
-    ) 
-    {
-        createProduct(
-            data: {
-                title: $title, 
-                description: $description, 
-                price: $price, 
-                category: $category,
-                rentType: $rentType,
-                rentPrice: $rentPrice,
-                userEmail: $userEmail
-            }
-        ) 
-        {
-            message
-        }
-    }
-`;
 
 const ProductSummary = ({prevStep, values}) => {
     const navigate = useNavigate();
@@ -101,5 +74,6 @@ const ProductSummary = ({prevStep, values}) => {
         </Stack>
     )
 };
+
 
 export default ProductSummary;

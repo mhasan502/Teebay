@@ -8,27 +8,20 @@ import {
     Space,
     Title,
     Container,
-    Stack
+    Stack, Spoiler
 } from "@mantine/core"
 import {useDisclosure} from "@mantine/hooks";
-import {gql, useMutation} from "@apollo/client";
+import {useMutation} from "@apollo/client";
 import {useNavigate} from "react-router-dom";
 import OwnerAction from "./OwnerAction";
+import DELETE_PRODUCT_MUTATION from "../../mutations/ProductMutations/DeleteProductMutation";
 
-
-const DELETE_PRODUCT_QUERY = gql`
-    mutation deleteProductMutation($id: String!) {
-        deleteProduct(id: $id) {
-            message
-        }
-    }
-`;
 
 const Product = ({product, owner = false}) => {
     const navigate = useNavigate();
     const [openedDeleteModal, {open: openDeleteModal, close: closeDeleteModal}] = useDisclosure(false);
 
-    const [deleteProductMutation] = useMutation(DELETE_PRODUCT_QUERY, {
+    const [deleteProductMutation] = useMutation(DELETE_PRODUCT_MUTATION, {
         onCompleted: (data) => {
             alert(data.deleteProduct.message);
             navigate(0);
@@ -86,7 +79,11 @@ const Product = ({product, owner = false}) => {
                         Price: ${product.price} | Rent: ${product.rentPrice} {product.rentType.toLowerCase()}
                     </Text>
 
-                    <Text>{product.description}</Text>
+                    <Spoiler maxHeight={80} showLabel="... More details" hideLabel="Hide">
+                        <Text>
+                            {product.description}
+                        </Text>
+                    </Spoiler>
 
                     <Text size="xs" c="dimmed"> Date Posted: {""}
                         {new Date(product.datePosted).toLocaleDateString("en-UK", {
@@ -101,5 +98,6 @@ const Product = ({product, owner = false}) => {
         </Container>
     )
 };
+
 
 export default Product;

@@ -87,12 +87,12 @@ class BuyProductMutation(graphene.Mutation):
     message = graphene.String()
 
     @classmethod
-    def mutate(cls, root, info, product_id, email):
+    def mutate(cls, root, info, product_id, customer_email):
         product = ProductModel.objects.get(id=product_id)
-        if product in BuyRentalModel.objects.filter(product=product, is_bought=True).first():
+        if BuyRentalModel.objects.filter(product=product, is_bought=True).exists():
             message = "Product already bought"
         else:
-            customer = UserModel.objects.get(email=email)
+            customer = UserModel.objects.get(email=customer_email)
             buy_rental = BuyRentalModel.objects.create(
                 product=product,
                 customer=customer,
@@ -114,12 +114,17 @@ class RentProductMutation(graphene.Mutation):
     message = graphene.String()
 
     @classmethod
-    def mutate(cls, root, info, product_id, email, date_from, date_to):
+    def mutate(cls, root, info, product_id, customer_email, date_from, date_to):
         product = ProductModel.objects.get(id=product_id)
-        if product in BuyRentalModel.objects.filter(product=product, is_rented=True).first():
-            message = "Product already rented"
+        if BuyRentalModel.objects.filter(
+                product=product,
+                is_rented=True,
+                date_from__lte=date_from,
+                date_from__gte=date_to
+        ).exists():
+            message = "Product already rented for this period"
         else:
-            customer = UserModel.objects.get(email=email)
+            customer = UserModel.objects.get(email=customer_email)
             buy_rental = BuyRentalModel.objects.create(
                 product=product,
                 customer=customer,

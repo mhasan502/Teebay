@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react"
-import {gql, useQuery} from "@apollo/client";
+import {useQuery} from "@apollo/client";
 import Logout from "../../components/User/Logout";
 import {
-    Anchor,
+    Anchor, Button,
     Center,
     Container,
     Group,
@@ -11,44 +11,13 @@ import {
 } from "@mantine/core";
 import MyProductPage from "./ProductPage/MyProductPage";
 import AllProductPage from "./ProductPage/AllProductPage";
+import {Link} from "react-router-dom";
+import LIST_OF_ALL_PRODUCTS_QUERY from "../../queries/ProductQueries/ListOfAllProductsQuery";
+import LIST_OF_CREATED_PRODUCT_BY_USER_QUERY from "../../queries/ProductQueries/ListOfCreatedProductByUserQuery";
 
-const LIST_OF_CREATED_PRODUCT_BY_USER_QUERY = gql`
-    query {
-        allProductCreatedByUser(email: "mhasan502@gmail.com") {
-            id
-            title
-            description
-            price
-            rentType
-            rentPrice
-            datePosted
-            category {
-                categoryName
-            }
-        }
-    }
-`;
-
-const LIST_OF_ALL_PRODUCTS = gql`
-    query {
-        allProducts {
-            id
-            title
-            rentType
-            rentPrice
-            price
-            description
-            datePosted
-            category {
-                categoryName
-            }
-        }
-    }
-`;
 
 const ProductPage = () => {
-    const [myProductPage, setMyProductPage] = useState(false);
-
+    const [myProductPage, setMyProductPage] = useState(true);
     const [createdProducts, setCreatedProducts] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
 
@@ -58,7 +27,7 @@ const ProductPage = () => {
         }
     });
 
-    useQuery(LIST_OF_ALL_PRODUCTS, {
+    useQuery(LIST_OF_ALL_PRODUCTS_QUERY, {
         onCompleted: (data) => {
             setAllProducts(data.allProducts)
         }
@@ -78,7 +47,14 @@ const ProductPage = () => {
 
     return (
         <>
-            <Logout/>
+            <Group position="right" mt={10} mr={15}>
+                <Link to={"/history"}>
+                    <Button>
+                        History
+                    </Button>
+                </Link>
+                <Logout/>
+            </Group>
             <Container>
                 <Center>
                     <Group>
@@ -89,7 +65,6 @@ const ProductPage = () => {
                         </Title>
                     </Group>
                 </Center>
-
                 <Space h="lg"/>
 
                 {myProductPage ? <MyProductPage products={createdProducts}/> : <AllProductPage products={allProducts}/>}
@@ -100,5 +75,6 @@ const ProductPage = () => {
         </>
     )
 };
+
 
 export default ProductPage;

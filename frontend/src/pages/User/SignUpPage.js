@@ -13,28 +13,10 @@ import {
     Space
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {gql, useMutation} from "@apollo/client";
+import {useMutation} from "@apollo/client";
 import {Link} from "react-router-dom";
+import SIGN_UP_MUTATION from "../../mutations/UserMutations/SignUpMutation";
 
-
-const SIGN_UP_MUTATION = gql`
-    mutation SignUp($firstName: String!, $lastName: String!, $address: String!, $email: String!, $phone: String!, $password: String!) {
-        signUp(data: {
-            signInInput: {
-                email: $email, 
-                password: $password
-            }
-            firstName: $firstName, 
-            lastName: $lastName, 
-            address: $address, 
-            phone: $phone, 
-        })
-        {
-            token
-            email
-        }
-    }
-`;
 
 const SignUpPage = () => {
     const [signUpMutation] = useMutation(SIGN_UP_MUTATION, {
@@ -190,5 +172,6 @@ const SignUpPage = () => {
         </Container>
     )
 };
+
 
 export default SignUpPage;

@@ -13,22 +13,10 @@ import {
     Title
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {gql, useMutation} from "@apollo/client";
+import {useMutation} from "@apollo/client";
 import {Link} from "react-router-dom";
+import SIGN_IN_MUTATION from "../../mutations/UserMutations/SignInMutation";
 
-
-const SIGN_IN_MUTATION = gql`
-    mutation signIn($email: String!, $password: String!) {
-        signIn(data: {
-            email: $email, 
-            password: $password
-        }) 
-        {
-            token
-            email
-        }
-    }
-`;
 
 const SignInPage = () => {
     const [signInMutation] = useMutation(SIGN_IN_MUTATION, {
@@ -109,7 +97,7 @@ const SignInPage = () => {
                             </Text>
                             <Link to="/sign-up">
                                 <Text color="blue.7" weight={500}>
-                                    Signup
+                                    Sign Up
                                 </Text>
                             </Link>
                         </Group>

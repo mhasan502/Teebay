@@ -5,6 +5,7 @@ import ProductPage from "./pages/Product/ProductPage";
 import EditProductPage from "./pages/Product/EditProductPage";
 import CreateProductPage from "./pages/Product/CreateProductPage";
 import ProductDetailsPage from "./pages/Product/ProductDetailsPage";
+import HistoryPage from "./pages/Product/HistoryPage";
 
 
 function App() {
@@ -22,9 +23,9 @@ function App() {
                 }/>
 
                 <Route path="/create-product" element={<CreateProductPage/>}/>
-                <Route path="/edit-product" element={<EditProductPage/>}/>
+                <Route path="/edit-product/:id" element={<EditProductPage/>}/>
                 <Route path="/product-details/:id" element={<ProductDetailsPage/>}/>
-
+                <Route path="/history" element={<HistoryPage/>}/>
             </Routes>
         </BrowserRouter>
     )

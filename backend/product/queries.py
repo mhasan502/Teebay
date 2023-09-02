@@ -14,7 +14,7 @@ class Query(graphene.ObjectType):
     sold_products_for_user = graphene.List(CombinedProductCategoryType, email=graphene.String(required=True))
     bought_products_for_user = graphene.List(CombinedProductCategoryType, email=graphene.String(required=True))
     lent_products_for_user = graphene.List(CombinedProductCategoryType, email=graphene.String(required=True))
-    burrowed_products_for_customer = graphene.List(CombinedProductCategoryType, email=graphene.String(required=True))
+    borrowed_products_for_user = graphene.List(CombinedProductCategoryType, email=graphene.String(required=True))
 
     def resolve_product(self, info, id):
         return ProductModel.objects.get(id=id)
@@ -32,13 +32,13 @@ class Query(graphene.ObjectType):
         return ProductModel.objects.all()
 
     def resolve_sold_products_for_user(self, info, email):
-        return BuyRentalModel.objects.filter(is_bought=True, product__owner__email=email)
+        return [data.product for data in BuyRentalModel.objects.filter(is_bought=True, product__owner__email=email)]
 
     def resolve_bought_products_for_user(self, info, email):
-        return BuyRentalModel.objects.filter(is_bought=True, customer__email=email)
+        return [data.product for data in BuyRentalModel.objects.filter(is_bought=True, customer__email=email)]
 
     def resolve_lent_products_for_user(self, info, email):
-        return BuyRentalModel.objects.filter(is_rented=True, product__owner__email=email)
+        return [data.product for data in BuyRentalModel.objects.filter(is_rented=True, product__owner__email=email)]
 
-    def resolve_burrowed_products_for_customer(self, info, email):
-        return BuyRentalModel.objects.filter(is_rented=True, customer__email=email)
+    def resolve_borrowed_products_for_user(self, info, email):
+        return [data.product for data in BuyRentalModel.objects.filter(is_rented=True, customer__email=email)]
