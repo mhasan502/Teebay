@@ -2,8 +2,8 @@ import {gql} from "@apollo/client";
 
 
 const LIST_OF_CREATED_PRODUCT_BY_USER_QUERY = gql`
-    query {
-        allProductCreatedByUser(email: "mhasan502@gmail.com") {
+    query AllProductCreatedByUser($email: String!) {
+        allProductCreatedByUser(email: $email) {
             id
             title
             description

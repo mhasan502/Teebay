@@ -29,6 +29,7 @@ const EditProductPage = () => {
     const [categoryTypes, setCategoryTypes] = useState([]);
 
     useQuery(ALL_CATEGORY_TYPES_QUERY, {
+        fetchPolicy: 'cache-first',
         onCompleted: (data) => {
             setCategoryTypes(data.allCategoryTypes)
         },
@@ -47,6 +48,7 @@ const EditProductPage = () => {
     });
 
     const getProductQuery = useQuery(GET_PRODUCT_QUERY, {
+        fetchPolicy: 'cache-and-network',
         variables: {
             id: product_id
         },
@@ -57,7 +59,6 @@ const EditProductPage = () => {
             form.values.rentPrice = parseFloat(data.product.rentPrice);
             form.values.rentType = data.product.rentType;
             form.values.category = data.product.category.map((category) => category.id);
-            console.log(form.values)
         },
         onError: (error) => {
             alert(error);
@@ -100,7 +101,7 @@ const EditProductPage = () => {
     return (
         <Container my={100}>
             <Group position="right">
-                <ActionIcon size="lg" variant="filled" onClick={() => navigate(-1)}>
+                <ActionIcon size="lg" variant="filled" color="red.9" onClick={() => navigate(-1)}>
                     <IconX/>
                 </ActionIcon>
             </Group>

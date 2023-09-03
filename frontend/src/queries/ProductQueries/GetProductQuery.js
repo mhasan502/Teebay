@@ -14,6 +14,9 @@ const GET_PRODUCT_QUERY = gql`
               id
               categoryName
             }
+            owner {
+                email
+            }
         }
     }
 `;

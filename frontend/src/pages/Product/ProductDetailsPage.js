@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useMutation, useQuery} from "@apollo/client";
 import {ActionIcon, Button, Container, Group, Modal, Paper, Space, Stack, Text, Title} from "@mantine/core";
@@ -12,12 +12,27 @@ import RENT_PRODUCT_MUTATION from "../../mutations/ProductMutations/RentProductM
 
 const ProductDetailsPage = () => {
     const navigate = useNavigate();
+    const [sellerEmail, setSellerEmail] = useState('');
     const [product, setProduct] = useState([]);
     const [rentPeriod, setRentPeriod] = useState([]);
     const [openedBuyModal, {open: openBuyModal, close: closeBuyModal}] = useDisclosure(false);
     const [openedRentModal, {open: openRentModal, close: closeRentModal}] = useDisclosure(false);
 
     const product_id = parseInt(useParams().id);
+    const getProductQuery = useQuery(GET_PRODUCT_QUERY, {
+        fetchPolicy: 'cache-and-network',
+        variables: {
+            id: product_id
+        },
+        onCompleted: (data) => {
+            setProduct(data.product);
+            setSellerEmail(data.product.owner.email);
+        },
+        onError: (error) => {
+            alert(error);
+        }
+    });
+
     const [buyProductMutation] = useMutation(BUY_PRODUCT_MUTATION, {
         onCompleted: (data) => {
             alert(data.buyProduct.message);
@@ -38,24 +53,11 @@ const ProductDetailsPage = () => {
         }
     });
 
-    useQuery(GET_PRODUCT_QUERY, {
-        variables: {
-            id: product_id
-        },
-        onCompleted: (data) => {
-            setProduct(data.product);
-        },
-        onError: (error) => {
-            alert(error);
+    useEffect(() => {
+        if (getProductQuery.data) {
+            setProduct(getProductQuery.data);
         }
-    });
-
-    const reservedDate = (date) => {
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        return (day >= 5 && day <= 10 && month === 9 && year === 2023);
-    };
+    }, [getProductQuery.data]);
 
     const handleBuy = async () => {
         await buyProductMutation({
@@ -112,7 +114,6 @@ const ProductDetailsPage = () => {
                         radius="md"
                         label="Enter rental period"
                         icon={<IconCalendar size="1.2rem"/>}
-                        excludeDate={reservedDate}
                         locale="UTC+6"
                         valueFormat="YYYY-MM-DD"
                         allowSingleDateInRange
@@ -137,7 +138,7 @@ const ProductDetailsPage = () => {
 
             <Container size="sm" px="xs" my={100}>
                 <Group position="right">
-                    <ActionIcon size="lg" variant="filled" onClick={() => navigate(-1)}>
+                    <ActionIcon size="lg" variant="filled" color="red.9" onClick={() => navigate(-1)}>
                         <IconX/>
                     </ActionIcon>
                 </Group>
@@ -165,14 +166,18 @@ const ProductDetailsPage = () => {
                     <Space h="lg"/>
                     <Space h="lg"/>
 
-                    <Group position="right">
-                        <Button color="violet.9" onClick={openRentModal}>
-                            Rent
-                        </Button>
-                        <Button color="violet.9" onClick={openBuyModal}>
-                            Buy
-                        </Button>
-                    </Group>
+                    {(sellerEmail !== localStorage.getItem('email') ?
+                        (<Group position="right">
+                            <Button color="violet.9" onClick={openRentModal}>
+                                Rent
+                            </Button>
+                            <Button color="violet.9" onClick={openBuyModal}>
+                                Buy
+                            </Button>
+                        </Group>)
+                        : null
+                    )}
+
                 </Paper>
             </Container>
         </>

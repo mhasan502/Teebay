@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
                 "rent_type": "Daily",
                 "rent_price": 1.00,
                 "category": [CategoryModel.objects.get(category_name="Toys")],
-                "owner": UserModel.objects.get(id=1),
+                "owner": UserModel.objects.get(id=2),
             },
         ]
         for product in product_list:
@@ -150,8 +150,8 @@ class Migration(migrations.Migration):
             name="BuyRentalModel",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("date_from", models.DateTimeField(blank=True)),
-                ("date_to", models.DateTimeField(blank=True, null=True)),
+                ("date_from", models.DateField(blank=True, null=True)),
+                ("date_to", models.DateField(blank=True, null=True)),
                 ("is_rented", models.BooleanField(default=False)),
                 ("is_bought", models.BooleanField(default=False)),
                 (

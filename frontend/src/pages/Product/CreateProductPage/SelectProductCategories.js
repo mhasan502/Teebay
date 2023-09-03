@@ -16,6 +16,7 @@ const SelectProductCategories = ({nextStep, prevStep, handleChange, values}) => 
     const [categoryTypes, setCategoryTypes] = useState([]);
 
     useQuery(ALL_CATEGORY_TYPES_QUERY, {
+        fetchPolicy: 'cache-first',
         onCompleted: (data) => {
             setCategoryTypes(data.allCategoryTypes)
         }

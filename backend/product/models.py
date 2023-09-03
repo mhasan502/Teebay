@@ -3,6 +3,9 @@ from user.models import UserModel
 
 
 class CategoryModel(models.Model):
+    """
+    Category model for storing category names
+    """
     category_name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -63,4 +66,7 @@ class BuyRentalModel(models.Model):
         verbose_name_plural = 'Buy and Rentals'
 
     def __str__(self):
-        return f'{self.product.title} ({self.date_from} - {self.date_to})'
+        if self.is_bought:
+            return f'{self.product.title} (Bought)'
+        elif self.is_rented:
+            return f'{self.product.title} ({self.date_from} - {self.date_to})'

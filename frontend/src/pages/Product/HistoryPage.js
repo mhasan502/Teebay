@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ActionIcon, Container, Group, Paper, Space, Tabs} from "@mantine/core";
 import Product from "../../components/Product/Product";
-import {useQuery} from "@apollo/client";
+import {useLazyQuery} from "@apollo/client";
 import BOUGHT_PRODUCTS_QUERY from "../../queries/ProductQueries/BoughtProductsQuery";
 import SOLD_PRODUCTS_QUERY from "../../queries/ProductQueries/SoldProductsQuery";
 import BORROWED_PRODUCTS_QUERY from "../../queries/ProductQueries/BorrowedProductsQuery";
@@ -18,38 +18,37 @@ const HistoryPage = () => {
     const [borrowedProducts, setBorrowedProducts] = useState([]);
     const [lentProducts, setLentProducts] = useState([]);
 
-    useQuery(BOUGHT_PRODUCTS_QUERY, {
+    const [boughtProductQuery] = useLazyQuery(BOUGHT_PRODUCTS_QUERY, {
+        fetchPolicy: 'cache-and-network',
         variables: {email: localStorage.getItem('email')},
-        onCompleted: (data) => {
-            setBoughtProducts(data.boughtProductsForUser);
-        }
+    });
+    
+    const [soldProductQuery] = useLazyQuery(SOLD_PRODUCTS_QUERY, {
+        fetchPolicy: 'cache-and-network',
+        variables: {email: localStorage.getItem('email')},
+    });
+    
+    const [borrowedProductQuery] = useLazyQuery(BORROWED_PRODUCTS_QUERY, {
+        fetchPolicy: 'cache-and-network',
+        variables: {email: localStorage.getItem('email')},
+    });
+    
+    const [lentProductQuery] = useLazyQuery(LENT_PRODUCTS_QUERY, {
+        fetchPolicy: 'cache-and-network',
+        variables: {email: localStorage.getItem('email')},
     });
 
-    useQuery(SOLD_PRODUCTS_QUERY, {
-        variables: {email: localStorage.getItem('email')},
-        onCompleted: (data) => {
-            setSoldProducts(data.soldProductsForUser);
-        }
-    });
-
-    useQuery(BORROWED_PRODUCTS_QUERY, {
-        variables: {email: localStorage.getItem('email')},
-        onCompleted: (data) => {
-            setBorrowedProducts(data.borrowedProductsForUser);
-        }
-    });
-
-    useQuery(LENT_PRODUCTS_QUERY, {
-        variables: {email: localStorage.getItem('email')},
-        onCompleted: (data) => {
-            setLentProducts(data.lentProductsForUser);
-        }
-    });
+    useEffect(() => {
+        boughtProductQuery().then(r => setBoughtProducts(r.data.boughtProductsForUser));
+        soldProductQuery().then(r => setSoldProducts(r.data.soldProductsForUser));
+        borrowedProductQuery().then(r => setBorrowedProducts(r.data.borrowedProductsForUser));
+        lentProductQuery().then(r => setLentProducts(r.data.lentProductsForUser));
+    }, [boughtProductQuery, soldProductQuery, borrowedProductQuery, lentProductQuery]);
 
     return (
         <Container size="sm" px="xs" my={80}>
             <Group position="right">
-                <ActionIcon size="lg" variant="filled" onClick={() => navigate(-1)}>
+                <ActionIcon size="lg" variant="filled" color="red.9" onClick={() => navigate(-1)}>
                     <IconX/>
                 </ActionIcon>
             </Group>

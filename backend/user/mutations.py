@@ -11,6 +11,10 @@ class SignInInput(graphene.InputObjectType):
 
 
 class SignInMutation(graphene.Mutation):
+    """
+    Sign in mutation by given data of SignInInput
+    Return token and email
+    """
     class Arguments:
         data = SignInInput(required=True)
 
@@ -45,6 +49,10 @@ class SignUpInput(graphene.InputObjectType):
 
 
 class SignUpMutation(graphene.Mutation):
+    """
+    Sign up mutation by given data of SignUpInput
+    Return token and email
+    """
     class Arguments:
         data = SignUpInput(required=True)
 
@@ -77,5 +85,8 @@ class SignUpMutation(graphene.Mutation):
 
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for user
+    """
     sign_in = SignInMutation.Field()
     sign_up = SignUpMutation.Field()

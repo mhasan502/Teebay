@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react"
-import {useQuery} from "@apollo/client";
+import {useLazyQuery} from "@apollo/client";
 import Logout from "../../components/User/Logout";
 import {
     Anchor, Button,
     Center,
-    Container,
+    Container, Divider,
     Group,
     Space,
     Title
@@ -17,20 +17,17 @@ import LIST_OF_CREATED_PRODUCT_BY_USER_QUERY from "../../queries/ProductQueries/
 
 
 const ProductPage = () => {
-    const [myProductPage, setMyProductPage] = useState(true);
+    const [myProductPage, setMyProductPage] = useState(false);
     const [createdProducts, setCreatedProducts] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
 
-    useQuery(LIST_OF_CREATED_PRODUCT_BY_USER_QUERY, {
-        onCompleted: (data) => {
-            setCreatedProducts(data.allProductCreatedByUser)
-        }
+    const [listOfCreatedProductByUser] = useLazyQuery(LIST_OF_CREATED_PRODUCT_BY_USER_QUERY, {
+        fetchPolicy: 'cache-and-network',
+        variables: {email: localStorage.getItem('email')},
     });
 
-    useQuery(LIST_OF_ALL_PRODUCTS_QUERY, {
-        onCompleted: (data) => {
-            setAllProducts(data.allProducts)
-        }
+    const [listOfAllProduct] = useLazyQuery(LIST_OF_ALL_PRODUCTS_QUERY, {
+        fetchPolicy: 'cache-and-network',
     });
 
     const handlePageChange = () => {
@@ -38,12 +35,9 @@ const ProductPage = () => {
     };
 
     useEffect(() => {
-        if (myProductPage) {
-            setCreatedProducts(createdProducts);
-        } else {
-            setAllProducts(allProducts);
-        }
-    }, [myProductPage, allProducts, createdProducts]);
+        listOfCreatedProductByUser().then(r => setCreatedProducts(r.data.allProductCreatedByUser));
+        listOfAllProduct().then(r => setAllProducts(r.data.allProducts));
+    }, [listOfAllProduct, listOfCreatedProductByUser]);
 
     return (
         <>
@@ -57,13 +51,27 @@ const ProductPage = () => {
             </Group>
             <Container>
                 <Center>
-                    <Group>
-                        <Title>
-                            <Anchor onClick={handlePageChange}>
-                                {myProductPage ? "MY PRODUCTS" : "ALL PRODUCTS"}
-                            </Anchor>
+                        <Title order={2}>
+                            <Group>
+                            {myProductPage ?
+                                <>
+                                    <Anchor onClick={handlePageChange}>
+                                        All Products
+                                    </Anchor>
+                                    <Divider size="md" orientation="vertical"/>
+                                    My Products
+                                </>
+                                :
+                                <>
+                                    All Products
+                                    <Divider size="sm" orientation="vertical"/>
+                                    <Anchor onClick={handlePageChange}>
+                                        My Products
+                                    </Anchor>
+                                </>
+                            }
+                            </Group>
                         </Title>
-                    </Group>
                 </Center>
                 <Space h="lg"/>
 

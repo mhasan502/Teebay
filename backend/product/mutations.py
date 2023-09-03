@@ -1,3 +1,4 @@
+from datetime import date, datetime, timedelta
 import graphene
 from user.models import UserModel
 from .models import ProductModel, CategoryModel, BuyRentalModel
@@ -14,6 +15,11 @@ class ProductInput(graphene.InputObjectType):
 
 
 class CreateProductMutation(graphene.Mutation):
+    """
+    Create product mutation by given data of ProductInput
+    Return message
+    """
+
     class Arguments:
         data = ProductInput(required=True)
 
@@ -39,6 +45,11 @@ class CreateProductMutation(graphene.Mutation):
 
 
 class EditProductMutation(graphene.Mutation):
+    """
+    Edit product mutation by given id and data of ProductInput
+    Return message
+    """
+
     class Arguments:
         id = graphene.String(required=True)
         data = ProductInput(required=True)
@@ -65,6 +76,11 @@ class EditProductMutation(graphene.Mutation):
 
 
 class DeleteProductMutation(graphene.Mutation):
+    """
+    Delete product mutation by given id
+    Return message
+    """
+
     class Arguments:
         id = graphene.String(required=True)
 
@@ -80,6 +96,11 @@ class DeleteProductMutation(graphene.Mutation):
 
 
 class BuyProductMutation(graphene.Mutation):
+    """
+    Buy product mutation by given product_id and customer_email
+    Return message
+    """
+
     class Arguments:
         product_id = graphene.String(required=True)
         customer_email = graphene.String(required=True)
@@ -105,6 +126,11 @@ class BuyProductMutation(graphene.Mutation):
 
 
 class RentProductMutation(graphene.Mutation):
+    """
+    Rent product mutation by given product_id, customer_email, date_from and date_to
+    Return message
+    """
+
     class Arguments:
         product_id = graphene.String(required=True)
         customer_email = graphene.String(required=True)
@@ -115,30 +141,42 @@ class RentProductMutation(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, product_id, customer_email, date_from, date_to):
-        product = ProductModel.objects.get(id=product_id)
-        if BuyRentalModel.objects.filter(
-                product=product,
-                is_rented=True,
-                date_from__lte=date_from,
-                date_from__gte=date_to
-        ).exists():
-            message = "Product already rented for this period"
-        else:
-            customer = UserModel.objects.get(email=customer_email)
-            buy_rental = BuyRentalModel.objects.create(
-                product=product,
-                customer=customer,
-                date_from=date_from,
-                date_to=date_to,
-                is_rented=True
-            )
-            buy_rental.save()
-            message = "Product rented successfully"
+        def generate_date_range(start_date, end_date):
+            list_of_dates = []
+            for n in range(int((end_date - start_date).days) + 1):
+                list_of_dates.append(start_date + timedelta(n))
+            return list_of_dates
 
+        product = ProductModel.objects.get(id=product_id)
+        date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+        date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+
+        existing_product = BuyRentalModel.objects.filter(product=product, is_rented=True)
+        if existing_product.exists():
+            rented_dates = existing_product.values_list("date_from", "date_to")
+            reserved_dates = generate_date_range(rented_dates[0][0], rented_dates[0][1])
+            if date_from in reserved_dates or date_to in reserved_dates:
+                message = f"Product already rented from {date_from} to {date_to}"
+                return cls(message=message)
+
+        customer = UserModel.objects.get(email=customer_email)
+        buy_rental = BuyRentalModel.objects.create(
+            product=product,
+            customer=customer,
+            date_from=date_from,
+            date_to=date_to,
+            is_rented=True
+        )
+        buy_rental.save()
+
+        message = "Product rented successfully"
         return cls(message=message)
 
 
 class Mutation(graphene.ObjectType):
+    """
+    Mutation class for all product mutations
+    """
     create_product = CreateProductMutation.Field()
     edit_product = EditProductMutation.Field()
     delete_product = DeleteProductMutation.Field()
