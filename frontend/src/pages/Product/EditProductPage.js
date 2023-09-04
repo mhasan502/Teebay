@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useMutation, useQuery} from "@apollo/client";
-import { IconX } from '@tabler/icons-react';
+import {IconX} from '@tabler/icons-react';
 import ALL_CATEGORY_TYPES_QUERY from "../../queries/ProductQueries/AllCategoryTypesQuery";
 import EDIT_PRODUCT_MUTATION from "../../mutations/ProductMutations/EditProductMutation";
 import GET_PRODUCT_QUERY from "../../queries/ProductQueries/GetProductQuery";
@@ -105,114 +105,116 @@ const EditProductPage = () => {
                     <IconX/>
                 </ActionIcon>
             </Group>
-            <Stack spacing="xs">
-                <Text>
-                    Title
-                </Text>
-                <TextInput
-                    required
-                    size="md"
-                    placeholder="Enter product title"
-                    value={form.values.title}
-                    onChange={(event) => form.setFieldValue("title", event.currentTarget.value)}
-                    variant="filled"
-                    radius="md"
-                />
-            </Stack>
-            <Space h="lg"/>
-            <Stack spacing="xs">
-                <Text>
-                    Category
-                </Text>
-                <MultiSelect
-                    required
-                    size="md"
-                    placeholder="Select a category"
-                    value={form.values.category}
-                    data={categoryTypes.map((category) => ({value: category.id, label: category.categoryName}))}
-                    onChange={(event) => form.setFieldValue("category", event)}
-                    variant="filled"
-                    radius="md"
-                />
-            </Stack>
-            <Space h="lg"/>
-            <Stack spacing="xs">
-                <Text>
-                    Description
-                </Text>
-                <Textarea
-                    required
-                    size="md"
-                    placeholder="Enter product description of your product"
-                    value={form.values.description}
-                    onChange={(event) => form.setFieldValue("description", event.currentTarget.value)}
-                    variant="filled"
-                    radius="md"
-                    autosize
-                    minRows={5}
-                />
-            </Stack>
-            <Space h="lg"/>
-            <Stack spacing="xs">
-                <Group>
-                    <Stack spacing="xs">
-                        <Text>
-                            Price
-                        </Text>
-                        <NumberInput
-                            required
-                            size="md"
-                            placeholder="Enter product price"
-                            value={form.values.price}
-                            onChange={(event) => form.setFieldValue("price", event)}
-                            variant="filled"
-                            radius="md"
-                            hideControls
-                            icon="$"
-                        />
-                    </Stack>
-                    <Stack spacing="xs">
-                        <Text>
-                            Rent price
-                        </Text>
-                        <Group>
+            <form onSubmit={form.onSubmit(values => handleEditProduct())}>
+                <Stack spacing="xs">
+                    <Text>
+                        Title
+                    </Text>
+                    <TextInput
+                        required
+                        size="md"
+                        placeholder="Enter product title"
+                        value={form.values.title}
+                        onChange={(event) => form.setFieldValue("title", event.currentTarget.value)}
+                        variant="filled"
+                        radius="md"
+                    />
+                </Stack>
+                <Space h="lg"/>
+                <Stack spacing="xs">
+                    <Text>
+                        Category
+                    </Text>
+                    <MultiSelect
+                        required
+                        size="md"
+                        placeholder="Select a category"
+                        value={form.values.category}
+                        data={categoryTypes.map((category) => ({value: category.id, label: category.categoryName}))}
+                        onChange={(event) => form.setFieldValue("category", event)}
+                        variant="filled"
+                        radius="md"
+                    />
+                </Stack>
+                <Space h="lg"/>
+                <Stack spacing="xs">
+                    <Text>
+                        Description
+                    </Text>
+                    <Textarea
+                        required
+                        size="md"
+                        placeholder="Enter product description of your product"
+                        value={form.values.description}
+                        onChange={(event) => form.setFieldValue("description", event.currentTarget.value)}
+                        variant="filled"
+                        radius="md"
+                        autosize
+                        minRows={5}
+                    />
+                </Stack>
+                <Space h="lg"/>
+                <Stack spacing="xs">
+                    <Group>
+                        <Stack spacing="xs">
+                            <Text>
+                                Price
+                            </Text>
                             <NumberInput
                                 required
                                 size="md"
-                                placeholder="Enter product rent price"
-                                value={form.values.rentPrice}
-                                onChange={(event) => form.setFieldValue("rentPrice", event)}
+                                placeholder="Enter product price"
+                                value={form.values.price}
+                                onChange={(event) => form.setFieldValue("price", event)}
                                 variant="filled"
                                 radius="md"
                                 hideControls
                                 icon="$"
                             />
-                            <Select
-                                required
-                                size="md"
-                                placeholder="Enter product rent type"
-                                value={form.values.rentType}
-                                onChange={(event) => form.setFieldValue("rentType", event)}
-                                data={[
-                                    {value: 'DAILY', label: 'per day'},
-                                    {value: 'HOURLY', label: 'per hour'},
-                                ]}
-                                variant="filled"
-                                radius="md"
-                            />
-                        </Group>
-                    </Stack>
+                        </Stack>
+                        <Stack spacing="xs">
+                            <Text>
+                                Rent price
+                            </Text>
+                            <Group>
+                                <NumberInput
+                                    required
+                                    size="md"
+                                    placeholder="Enter product rent price"
+                                    value={form.values.rentPrice}
+                                    onChange={(event) => form.setFieldValue("rentPrice", event)}
+                                    variant="filled"
+                                    radius="md"
+                                    hideControls
+                                    icon="$"
+                                />
+                                <Select
+                                    required
+                                    size="md"
+                                    placeholder="Enter product rent type"
+                                    value={form.values.rentType}
+                                    onChange={(event) => form.setFieldValue("rentType", event)}
+                                    data={[
+                                        {value: 'DAILY', label: 'per day'},
+                                        {value: 'HOURLY', label: 'per hour'},
+                                    ]}
+                                    variant="filled"
+                                    radius="md"
+                                />
+                            </Group>
+                        </Stack>
+                    </Group>
+                </Stack>
+
+                <Space h="lg"/>
+                <Space h="lg"/>
+
+                <Group position="right">
+                    <Button type="submit" color="violet.9">
+                        Edit Product
+                    </Button>
                 </Group>
-            </Stack>
-
-            <Space h="lg"/>
-            <Space h="lg"/>
-
-            <Group position="right">
-                <Button type="submit" color="violet.9" onClick={handleEditProduct}>
-                    Edit Product
-                </Button>
-            </Group>
+            </form>
         </Container>
     )
 };

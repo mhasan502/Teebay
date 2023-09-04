@@ -148,6 +148,10 @@ class RentProductMutation(graphene.Mutation):
             return list_of_dates
 
         product = ProductModel.objects.get(id=product_id)
+        if BuyRentalModel.objects.filter(product=product, is_bought=True).exists():
+            message = "Product already bought and cannot be rented"
+            return cls(message=message)
+
         date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
         date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
 

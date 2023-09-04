@@ -73,100 +73,101 @@ const SignUpPage = () => {
                     </Title>
                 </Center>
                 <Paper radius="md" p="xl" shadow="md" withBorder>
-                    <Stack>
-                        <Space h="md"/>
+                    <form onSubmit={form.onSubmit(values => handleSignUp())}>
                         <Stack>
-                            <Group grow>
+                            <Space h="md"/>
+                            <Stack>
+                                <Group grow>
+                                    <TextInput
+                                        required
+                                        size="md"
+                                        placeholder="First Name"
+                                        value={form.values.firstName}
+                                        onChange={(event) => form.setFieldValue('firstName', event.currentTarget.value)}
+                                        error={form.errors.firstName && 'First name is required'}
+                                        radius="md"
+                                    />
+                                    <TextInput
+                                        required
+                                        size="md"
+                                        placeholder="Last Name"
+                                        value={form.values.lastName}
+                                        onChange={(event) => form.setFieldValue('lastName', event.currentTarget.value)}
+                                        error={form.errors.lastName && 'Last name is required'}
+                                        radius="md"
+                                    />
+                                </Group>
+
                                 <TextInput
                                     required
                                     size="md"
-                                    placeholder="First Name"
-                                    value={form.values.firstName}
-                                    onChange={(event) => form.setFieldValue('firstName', event.currentTarget.value)}
-                                    error={form.errors.firstName && 'First name is required'}
+                                    placeholder="Address"
+                                    value={form.values.address}
+                                    onChange={(event) => form.setFieldValue('address', event.currentTarget.value)}
+                                    error={form.errors.address && 'Address is required'}
                                     radius="md"
                                 />
-                                <TextInput
+                                <Group grow>
+                                    <TextInput
+                                        required
+                                        size="md"
+                                        placeholder="Email"
+                                        value={form.values.email}
+                                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                                        error={form.errors.email && 'Invalid email'}
+                                        radius="md"
+                                    />
+                                    <TextInput
+                                        required
+                                        size="md"
+                                        placeholder="Phone"
+                                        value={form.values.phone}
+                                        onChange={(event) => form.setFieldValue('phone', event.currentTarget.value)}
+                                        error={form.errors.phone && 'Invalid phone number'}
+                                        radius="md"
+                                    />
+                                </Group>
+
+                                <PasswordInput
                                     required
                                     size="md"
-                                    placeholder="Last Name"
-                                    value={form.values.lastName}
-                                    onChange={(event) => form.setFieldValue('lastName', event.currentTarget.value)}
-                                    error={form.errors.lastName && 'Last name is required'}
+                                    placeholder="Password"
+                                    value={form.values.password}
+                                    onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                                    error={form.errors.password && 'Password should include at least 6 characters'}
                                     radius="md"
                                 />
-                            </Group>
-
-                            <TextInput
-                                required
-                                size="md"
-                                placeholder="Address"
-                                value={form.values.address}
-                                onChange={(event) => form.setFieldValue('address', event.currentTarget.value)}
-                                error={form.errors.address && 'Address is required'}
-                                radius="md"
-                            />
-                            <Group grow>
-                                <TextInput
+                                <PasswordInput
                                     required
                                     size="md"
-                                    placeholder="Email"
-                                    value={form.values.email}
-                                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                                    error={form.errors.email && 'Invalid email'}
+                                    placeholder="Confirm Password"
+                                    value={form.values.confirmPassword}
+                                    onChange={(event) => form.setFieldValue('confirmPassword', event.currentTarget.value)}
+                                    error={form.errors.confirmPassword && 'Password does not match'}
                                     radius="md"
                                 />
-                                <TextInput
-                                    required
-                                    size="md"
-                                    placeholder="Phone"
-                                    value={form.values.phone}
-                                    onChange={(event) => form.setFieldValue('phone', event.currentTarget.value)}
-                                    error={form.errors.phone && 'Invalid phone number'}
-                                    radius="md"
-                                />
-                            </Group>
+                            </Stack>
 
-                            <PasswordInput
-                                required
-                                size="md"
-                                placeholder="Password"
-                                value={form.values.password}
-                                onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                                error={form.errors.password && 'Password should include at least 6 characters'}
-                                radius="md"
-                            />
-                            <PasswordInput
-                                required
-                                size="md"
-                                placeholder="Confirm Password"
-                                value={form.values.confirmPassword}
-                                onChange={(event) => form.setFieldValue('confirmPassword', event.currentTarget.value)}
-                                error={form.errors.confirmPassword && 'Password does not match'}
-                                radius="md"
-                            />
-                        </Stack>
+                            <Center>
+                                <Group position="apart" mt="xl">
+                                    <Button type="submit" color="violet.9">
+                                        REGISTER
+                                    </Button>
+                                </Group>
+                            </Center>
 
-                        <Center>
-                            <Group position="apart" mt="xl">
-                                <Button type="submit" color="violet.9" onClick={handleSignUp}>
-                                    REGISTER
-                                </Button>
-                            </Group>
-                        </Center>
-
-                        <Group position="center" spacing="xs">
-                            <Text ta="center">
-                                Already have an account?
-                            </Text>
-                            <Link to={"/sign-in"}>
-                                <Text color="blue" weight={500}>
-                                    Sign In
+                            <Group position="center" spacing="xs">
+                                <Text ta="center">
+                                    Already have an account?
                                 </Text>
-                            </Link>
-                        </Group>
-
-                    </Stack>
+                                <Link to={"/sign-in"}>
+                                    <Text color="blue" weight={500}>
+                                        Sign In
+                                    </Text>
+                                </Link>
+                            </Group>
+                        </Stack>
+                    </form>
                 </Paper>
             </Stack>
         </Container>

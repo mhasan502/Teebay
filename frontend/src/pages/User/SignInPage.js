@@ -60,51 +60,53 @@ const SignInPage = () => {
                     </Title>
                 </Center>
                 <Paper radius="md" p="xl" shadow="md" withBorder>
-                    <Stack>
-                        <Space h="md"/>
+                    <form onSubmit={form.onSubmit(values => handleSignIn())}>
                         <Stack>
-                            <TextInput
-                                required
-                                size="md"
-                                placeholder="Email"
-                                value={form.values.email}
-                                onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                                error={form.errors.email && 'Invalid email'}
-                                radius="md"
-                            />
-                            <PasswordInput
-                                required
-                                size="md"
-                                placeholder="Password"
-                                value={form.values.password}
-                                onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                                error={form.errors.password && 'Password should include at least 6 characters'}
-                                radius="md"
-                            />
-                        </Stack>
+                            <Space h="md"/>
+                            <Stack>
+                                <TextInput
+                                    required
+                                    size="md"
+                                    placeholder="Email"
+                                    value={form.values.email}
+                                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                                    error={form.errors.email && 'Invalid email'}
+                                    radius="md"
+                                />
+                                <PasswordInput
+                                    required
+                                    size="md"
+                                    placeholder="Password"
+                                    value={form.values.password}
+                                    onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                                    error={form.errors.password && 'Password should include at least 6 characters'}
+                                    radius="md"
+                                />
+                            </Stack>
 
-                        <Center>
-                            <Group position="apart" mt="xl">
-                                <Button type="submit" color="violet.9" onClick={handleSignIn}>
-                                    LOGIN
-                                </Button>
-                            </Group>
-                        </Center>
+                            <Center>
+                                <Group position="apart" mt="xl">
+                                    <Button type="submit" color="violet.9">
+                                        LOGIN
+                                    </Button>
+                                </Group>
+                            </Center>
 
-                        <Group position="center" spacing="xs">
-                            <Text ta="center">
-                                Don't have an account?
-                            </Text>
-                            <Link to="/sign-up">
-                                <Text color="blue.7" weight={500}>
-                                    Sign Up
+                            <Group position="center" spacing="xs">
+                                <Text ta="center">
+                                    Don't have an account?
                                 </Text>
-                            </Link>
-                        </Group>
-
-                    </Stack>
+                                <Link to="/sign-up">
+                                    <Text color="blue.7" weight={500}>
+                                        Sign Up
+                                    </Text>
+                                </Link>
+                            </Group>
+                        </Stack>
+                    </form>
                 </Paper>
             </Stack>
+
         </Container>
     )
 };

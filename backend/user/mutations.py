@@ -23,7 +23,7 @@ class SignInMutation(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, data):
-        user = UserModel.objects.filter(email=data.email, password=data.password).first()
+        user = UserModel.objects.filter(email=data.email).first()
 
         if user is None:
             raise ValidationError('Invalid email address')
